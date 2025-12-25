@@ -23,7 +23,7 @@ type Account struct {
 	Name      string    `gorm:"not null;size:255" json:"name"`
 	Type      string    `gorm:"not null;size:50" json:"type"` // "cash", "bank", "credit_card"
 	Balance   float64   `gorm:"type:decimal(10,2);default:0.00" json:"balance"`
-	Currency  string    `gorm:"size:3;default:USD" json:"currency"` // "USD", "EUR", etc.
+	Currency  string    `gorm:"size:3;default:RM" json:"currency"` // "RM", "EUR", etc.
 	CreatedAt time.Time `gorm:"autoCreateTime" json:"created_at"`
 
 	// Relationships
