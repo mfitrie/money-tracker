@@ -1,23 +1,13 @@
 package main
 
-import (
-	"fmt"
-	"io"
-	"net/http"
-)
+import "github.com/gin-gonic/gin"
 
 func main() {
-	http.HandleFunc("/", getRoot)
-	http.HandleFunc("/hello", getHello)
-
-	http.ListenAndServe(":3333", nil)
-}
-
-func getRoot(w http.ResponseWriter, r *http.Request) {
-	fmt.Printf("got / request\n")
-	io.WriteString(w, "This is my website!\n")
-}
-func getHello(w http.ResponseWriter, r *http.Request) {
-	fmt.Printf("got /hello request\n")
-	io.WriteString(w, "Hello, HTTP!\n")
+	router := gin.Default()
+	router.GET("/ping", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "pong",
+		})
+	})
+	router.Run() // listens on 0.0.0.0:8080 by default
 }
