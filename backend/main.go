@@ -21,20 +21,16 @@ func main() {
 	if err != nil {
 		log.Fatal("Failed to connect to database:", err)
 	}
-
 	// Run migrations
 	if err := dbmodels.RunMigrations(db); err != nil {
 		log.Fatal("Failed to run migrations:", err)
 	}
-
 	log.Println("Database setup completed successfully")
 
 	//* Gin
 	r := gin.Default()
-
 	// Set up routes
 	routes.RegisterRoutes(r)
-
 	// Run the server
 	r.Run(":8080")
 

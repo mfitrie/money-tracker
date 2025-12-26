@@ -3,12 +3,15 @@ package dbmodels
 import (
 	"fmt"
 	"log"
+	"money-tracker/backend/internal/models"
 	"os"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )
+
+var DB *gorm.DB
 
 func InitDB() (*gorm.DB, error) {
 	// Or build from environment variables
@@ -37,16 +40,18 @@ func InitDB() (*gorm.DB, error) {
 	sqlDB.SetMaxIdleConns(10)
 	sqlDB.SetMaxOpenConns(100)
 
+	DB = db
+
 	return db, nil
 }
 
 func RunMigrations(db *gorm.DB) error {
 	// Auto migrate all models in order (respecting foreign key dependencies)
 	err := db.AutoMigrate(
-		&User{},
-		&Account{},
-		&Category{},
-		&Transaction{},
+		&models.User{},
+		&models.Account{},
+		&models.Category{},
+		&models.Transaction{},
 	)
 	if err != nil {
 		return fmt.Errorf("migration failed: %w", err)

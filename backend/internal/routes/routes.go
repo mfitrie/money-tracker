@@ -21,6 +21,7 @@ func RegisterRoutes(router *gin.Engine) {
 	// Hello world routes
 	// router.GET("/", controllers.Transaction)
 	router.GET("/transaction", controllers.Transaction)
+	router.GET("/category", controllers.GetAllCategories)
 	// router.POST("/send-test-email", controllers.PostSendEmail)
 
 	// router.POST("/sign-up", controllers.RegisterUser)
