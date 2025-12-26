@@ -2,7 +2,8 @@ package main
 
 import (
 	"log"
-	dbmodels "money-tracker/db"
+	dbmodels "money-tracker/backend/internal/db"
+	"money-tracker/backend/internal/routes"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -29,11 +30,12 @@ func main() {
 	log.Println("Database setup completed successfully")
 
 	//* Gin
-	router := gin.Default()
-	router.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
-	router.Run() // listens on 0.0.0.0:8080 by default
+	r := gin.Default()
+
+	// Set up routes
+	routes.RegisterRoutes(r)
+
+	// Run the server
+	r.Run(":8080")
+
 }
