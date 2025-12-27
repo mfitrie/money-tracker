@@ -17,6 +17,16 @@ func GetAllCategories() ([]models.Category, error) {
 	return items, nil
 }
 
+func GetCategoryById(id string) (models.Category, error) {
+	var category models.Category
+	err := dbmodels.DB.Where("id = ?", id).First(&category).Error
+	if err != nil {
+		return category, err
+	}
+
+	return category, nil
+}
+
 func CreateCategory(input models.Category) (*models.Category, error) {
 	newCategory := models.Category{
 		Name:  input.Name,

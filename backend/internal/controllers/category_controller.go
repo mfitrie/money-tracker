@@ -41,3 +41,15 @@ func CreateCategory(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"status": "Category created"})
 }
+
+func GetCategoryById(c *gin.Context) {
+	categoryId := c.Param("id")
+
+	item, err := services.GetCategoryById(categoryId)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Category not found"})
+		return
+	}
+
+	c.JSON(http.StatusOK, item)
+}
