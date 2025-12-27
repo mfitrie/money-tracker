@@ -7,8 +7,8 @@ import (
 )
 
 type Account struct {
-	ID        uuid.UUID `gorm:"primaryKey;type:uuid;" json:"id"`
-	UserID    uuid.UUID `gorm:"not null;type:uuid;index" json:"user_id"`
+	ID        uuid.UUID `gorm:"type:uuid;primaryKey;default:gen_random_uuid()" json:"id"`
+	UserID    uuid.UUID `gorm:"not null;type:uuid;index;" json:"user_id"`
 	Name      string    `gorm:"not null;size:255" json:"name"`
 	Type      string    `gorm:"not null;size:50" json:"type"` // "cash", "bank", "credit_card"
 	Balance   float64   `gorm:"type:decimal(10,2);default:0.00" json:"balance"`
