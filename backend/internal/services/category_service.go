@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fmt"
 	dbmodels "money-tracker/backend/internal/db"
 	"money-tracker/backend/internal/models"
 )
@@ -16,7 +17,18 @@ func GetAllCategories() ([]models.Category, error) {
 	return items, nil
 }
 
-// TODO:
-func CreateCategory() {
-	// var newCategory mode
+func CreateCategory(input models.Category) (*models.Category, error) {
+	newCategory := models.Category{
+		Name:  input.Name,
+		Type:  input.Type,
+		Color: input.Color,
+		// CreatedAt: time.Now().UTC(),
+	}
+
+	err := dbmodels.DB.Create(&newCategory).Error
+	if err != nil {
+		return nil, fmt.Errorf("Error creating category: %v", err)
+	}
+
+	return &newCategory, nil
 }
