@@ -1,12 +1,16 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
 
 type Transaction struct {
 	ID              uint      `gorm:"primaryKey" json:"id"`
-	UserID          uint      `gorm:"not null;index:idx_transactions_user_id" json:"user_id"`
-	AccountID       uint      `gorm:"not null;index:idx_transactions_account_id" json:"account_id"`
-	CategoryID      uint      `gorm:"not null;index:idx_transactions_category_id" json:"category_id"`
+	UserID          uuid.UUID `gorm:"type:uuid;not null;index:idx_transactions_user_id" json:"user_id"`
+	AccountID       uuid.UUID `gorm:"type:uuid;not null;index:idx_transactions_account_id" json:"account_id"`
+	CategoryID      uuid.UUID `gorm:"type:uuid;not null;index:idx_transactions_category_id" json:"category_id"` // Changed to uuid.UUID
 	Amount          float64   `gorm:"type:decimal(10,2);not null" json:"amount"`
 	Type            string    `gorm:"not null;size:50;check:type IN ('income', 'expense')" json:"type"` // "income" or "expense"
 	Description     string    `gorm:"type:text" json:"description"`
