@@ -23,7 +23,8 @@ func RegisterRoutes(router *gin.Engine) {
 	router.GET("/account/:id", controllers.GetAccountById)
 
 	//* Transaction
-	router.GET("/transaction", controllers.Transaction)
+	router.GET("/transaction", controllers.GetAllTransaction)
+	router.POST("/transaction", controllers.InsertTransaction)
 
 	//* Category
 	router.GET("/category", controllers.GetAllCategories)
