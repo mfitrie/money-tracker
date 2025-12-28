@@ -18,17 +18,17 @@ func RegisterRoutes(router *gin.Engine) {
 	// docs.SwaggerInfo.BasePath = "/"
 	// router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
-	// Hello world routes
-	// router.GET("/", controllers.Transaction)
+	//* Account
+	router.GET("/account", controllers.GetAllAccount)
+	router.GET("/account/:id", controllers.GetAccountById)
+
+	//* Transaction
 	router.GET("/transaction", controllers.Transaction)
 
+	//* Category
 	router.GET("/category", controllers.GetAllCategories)
 	router.GET("/category/:id", controllers.GetCategoryById)
 	router.POST("/category", controllers.CreateCategory)
-	// router.POST("/send-test-email", controllers.PostSendEmail)
-
-	// router.POST("/sign-up", controllers.RegisterUser)
-	// router.POST("/login", controllers.LoginUser)
 
 	// Protected routes (Require authentication)
 	// api := router.Group("")
