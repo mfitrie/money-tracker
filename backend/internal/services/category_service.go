@@ -6,6 +6,7 @@ import (
 	"money-tracker/backend/internal/models"
 )
 
+// TODO: pagination
 func GetAllCategories() ([]models.Category, error) {
 	var items []models.Category
 

@@ -7,6 +7,7 @@ import (
 	"money-tracker/backend/internal/schemas"
 )
 
+// TODO: pagination
 func GetAllTransaction() ([]models.Transaction, error) {
 	var transactions []models.Transaction
 
@@ -16,6 +17,16 @@ func GetAllTransaction() ([]models.Transaction, error) {
 	}
 
 	return transactions, nil
+}
+
+func GetTransactionById(id string) (models.Transaction, error) {
+	var transaction models.Transaction
+	err := dbmodels.DB.Where("id = ?", id).First(&transaction).Error
+	if err != nil {
+		return transaction, err
+	}
+
+	return transaction, nil
 }
 
 func InsertTransaction(input schemas.InsertTransaction) (*models.Transaction, error) {

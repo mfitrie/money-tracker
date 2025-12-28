@@ -5,6 +5,7 @@ import (
 	"money-tracker/backend/internal/models"
 )
 
+// TODO: pagination
 func GetAllAccount() ([]models.Account, error) {
 	var accounts []models.Account
 
