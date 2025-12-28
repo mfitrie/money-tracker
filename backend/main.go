@@ -29,7 +29,7 @@ func CorsMiddleware() gin.HandlerFunc {
 
 func main() {
 	// Load .env file
-	if err := godotenv.Load(); err != nil {
+	if err := godotenv.Load("../.env"); err != nil {
 		log.Println("No .env file found, using environment variables or defaults")
 	}
 
