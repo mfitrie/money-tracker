@@ -2,9 +2,9 @@ package services
 
 import (
 	"fmt"
-	dbmodels "money-tracker/backend/internal/db"
-	"money-tracker/backend/internal/models"
-	"money-tracker/backend/internal/schemas"
+	dbmodels "money-tracker/internal/db"
+	"money-tracker/internal/models"
+	"money-tracker/internal/schemas"
 )
 
 func GetAllTransaction(take int, offset int) ([]models.Transaction, int64, error) {

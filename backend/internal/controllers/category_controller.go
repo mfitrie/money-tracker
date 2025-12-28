@@ -1,9 +1,9 @@
 package controllers
 
 import (
-	"money-tracker/backend/internal/models"
-	"money-tracker/backend/internal/schemas"
-	"money-tracker/backend/internal/services"
+	"money-tracker/internal/models"
+	"money-tracker/internal/schemas"
+	"money-tracker/internal/services"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

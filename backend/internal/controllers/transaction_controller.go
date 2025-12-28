@@ -2,8 +2,8 @@ package controllers
 
 import (
 	"math"
-	"money-tracker/backend/internal/schemas"
-	"money-tracker/backend/internal/services"
+	"money-tracker/internal/schemas"
+	"money-tracker/internal/services"
 	"net/http"
 	"strconv"
 

@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"money-tracker/backend/internal/services"
+	"money-tracker/internal/services"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

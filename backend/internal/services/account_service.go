@@ -1,8 +1,8 @@
 package services
 
 import (
-	dbmodels "money-tracker/backend/internal/db"
-	"money-tracker/backend/internal/models"
+	dbmodels "money-tracker/internal/db"
+	"money-tracker/internal/models"
 )
 
 // TODO: pagination

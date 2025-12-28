@@ -1,10 +1,7 @@
 package routes
 
 import (
-	// "simple-gin-backend/internal/controllers"
-	// "simple-gin-backend/internal/middleware"
-
-	"money-tracker/backend/internal/controllers"
+	"money-tracker/internal/controllers"
 
 	"github.com/gin-gonic/gin"
 	// docs "simple-gin-backend/docs"

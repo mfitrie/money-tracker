@@ -3,7 +3,7 @@ package dbmodels
 import (
 	"fmt"
 	"log"
-	"money-tracker/backend/internal/models"
+	"money-tracker/internal/models"
 	"os"
 
 	"gorm.io/driver/postgres"

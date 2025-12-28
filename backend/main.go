@@ -2,8 +2,8 @@ package main
 
 import (
 	"log"
-	dbmodels "money-tracker/backend/internal/db"
-	"money-tracker/backend/internal/routes"
+	dbmodels "money-tracker/internal/db"
+	"money-tracker/internal/routes"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
