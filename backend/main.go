@@ -4,10 +4,28 @@ import (
 	"log"
 	dbmodels "money-tracker/backend/internal/db"
 	"money-tracker/backend/internal/routes"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
+
+func CorsMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		//TODO: change this later for frontend
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, Authorization")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "OPTIONS, GET, POST, PATCH, DELETE, PUT")
+
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(http.StatusNoContent)
+			return
+		}
+
+		c.Next()
+	}
+}
 
 func main() {
 	// Load .env file
@@ -31,6 +49,7 @@ func main() {
 	r := gin.Default()
 	// Set up routes
 	routes.RegisterRoutes(r)
+	r.Use(CorsMiddleware())
 	// Run the server
 	r.Run(":8080")
 
