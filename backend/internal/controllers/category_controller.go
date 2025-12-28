@@ -1,22 +1,55 @@
 package controllers
 
 import (
+	"math"
 	"money-tracker/internal/models"
 	"money-tracker/internal/schemas"
 	"money-tracker/internal/services"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
 
 func GetAllCategories(c *gin.Context) {
-	// userID := c.MustGet("user_id").(uint)
-	items, err := services.GetAllCategories()
+	takeStr := c.DefaultQuery("take", "10")
+	offsetStr := c.DefaultQuery("offset", "0")
+
+	take, err := strconv.Atoi(takeStr)
+	if err != nil || take <= 0 {
+		take = 10
+	}
+
+	skip, err := strconv.Atoi(offsetStr)
+	if err != nil || skip < 0 {
+		skip = 0
+	}
+
+	// Set max take
+	if take > 100 {
+		take = 100
+	}
+
+	items, total, err := services.GetAllCategories(take, skip)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, items)
+
+	// Calculate page and page_size from take and skip
+	pageSize := take
+	page := (skip / take) + 1
+	totalPages := int(math.Ceil(float64(total) / float64(take)))
+
+	c.JSON(http.StatusOK, gin.H{
+		"data": items,
+		"pagination": gin.H{
+			"page":        page,
+			"page_size":   pageSize,
+			"total":       total,
+			"total_pages": totalPages,
+		},
+	})
 
 }
 

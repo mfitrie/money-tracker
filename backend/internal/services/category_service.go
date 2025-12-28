@@ -6,16 +6,23 @@ import (
 	"money-tracker/internal/models"
 )
 
-// TODO: pagination
-func GetAllCategories() ([]models.Category, error) {
+func GetAllCategories(take int, offset int) ([]models.Category, int64, error) {
 	var items []models.Category
+	var total int64
 
-	result := dbmodels.DB.Find(&items)
+	// Get paginated results with take and skip
+	result := dbmodels.DB.Limit(take).Offset(offset).Order("created_at DESC").Find(&items)
 	if result.Error != nil {
-		return nil, result.Error
+		return nil, 0, result.Error
 	}
 
-	return items, nil
+	// Get total count
+	err2 := dbmodels.DB.Model(&models.Category{}).Count(&total).Error
+	if err2 != nil {
+		return nil, 0, err2
+	}
+
+	return items, 0, nil
 }
 
 func GetCategoryById(id string) (models.Category, error) {
