@@ -7,16 +7,22 @@ import (
 	"money-tracker/backend/internal/schemas"
 )
 
-// TODO: pagination
-func GetAllTransaction() ([]models.Transaction, error) {
+func GetAllTransaction(take int, offset int) ([]models.Transaction, int64, error) {
 	var transactions []models.Transaction
+	var total int64
 
-	result := dbmodels.DB.Find(&transactions)
-	if result.Error != nil {
-		return nil, result.Error
+	// Get total count
+	if err := dbmodels.DB.Model(&models.Transaction{}).Count(&total).Error; err != nil {
+		return nil, 0, err
 	}
 
-	return transactions, nil
+	// Get paginated results with take and skip
+	result := dbmodels.DB.Limit(take).Offset(offset).Order("created_at DESC").Find(&transactions)
+	if result.Error != nil {
+		return nil, 0, result.Error
+	}
+
+	return transactions, total, nil
 }
 
 func GetTransactionById(id string) (models.Transaction, error) {
