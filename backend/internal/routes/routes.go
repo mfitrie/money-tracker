@@ -28,6 +28,7 @@ func RegisterRoutes(router *gin.Engine) {
 	router.GET("/category", controllers.GetAllCategories)
 	router.GET("/category/:id", controllers.GetCategoryById)
 	router.POST("/category", controllers.CreateCategory)
+	router.DELETE("/category/:id", controllers.DeleteCategory)
 
 	// Protected routes (Require authentication)
 	// api := router.Group("")

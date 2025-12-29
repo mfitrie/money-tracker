@@ -50,3 +50,16 @@ func CreateCategory(input models.Category) (*models.Category, error) {
 
 	return &newCategory, nil
 }
+
+func DeleteCategory(id string) error {
+	result := dbmodels.DB.Delete(&models.Category{}, "id = ?", id)
+	if result.Error != nil {
+		return result.Error
+	}
+
+	if result.RowsAffected == 0 {
+		return fmt.Errorf("Category not found!")
+	}
+
+	return nil
+}

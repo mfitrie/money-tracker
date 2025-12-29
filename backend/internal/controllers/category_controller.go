@@ -9,6 +9,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 func GetAllCategories(c *gin.Context) {
@@ -85,4 +86,27 @@ func GetCategoryById(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, item)
+}
+
+func DeleteCategory(c *gin.Context) {
+	categoryId := c.Param("id")
+
+	// Validate UUID manually
+	parsedId, err := uuid.Parse(categoryId)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid UUID format"})
+		return
+	}
+
+	err = services.DeleteCategory(parsedId.String())
+	if err != nil {
+		if err.Error() == "category not found" {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Category not found"})
+			return
+		}
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.Status(http.StatusNoContent)
 }
