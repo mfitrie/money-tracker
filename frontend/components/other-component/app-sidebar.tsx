@@ -1,5 +1,6 @@
-import { Calendar, Home, Inbox, LayoutDashboard, Search, Settings, User } from "lucide-react"
+"use client"
 
+import { Calendar, Home, Inbox, LayoutDashboard, Search, Settings, User } from "lucide-react"
 import {
   Sidebar,
   SidebarContent,
@@ -10,21 +11,22 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import Link from "next/link"
 
 const items = [
   {
     title: "Home",
-    url: "#",
+    url: "/home",
     icon: Home,
   },
   {
     title: "Dashboard",
-    url: "#",
+    url: "/dashboard",
     icon: LayoutDashboard,
   },
   {
     title: "Account",
-    url: "#",
+    url: "/account",
     icon: User,
   },
 ]
@@ -37,16 +39,20 @@ export function AppSidebar() {
           <SidebarGroupLabel>Application</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <a href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              {
+                items.map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton asChild>
+                      <Link
+                        href={item.url}
+                      >
+                        <item.icon />
+                        <span>{item.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))
+              }
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
