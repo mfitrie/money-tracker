@@ -1,3 +1,4 @@
+// lib/queries/transactions.ts (or wherever you have it)
 import { ResponseGet } from "@/types/common-request.type";
 
 interface GetTransactionDTO {
@@ -32,23 +33,19 @@ interface GetTransactionDTO {
         type: string;
         created_at: string;
     };
-};
-
-export interface ResponseGetTransactionDTO extends ResponseGet<GetTransactionDTO> {
-    // data: T;
-    // message?: string;
-    // success?: boolean;
 }
 
-export async function getTransactions() {
-    //TODO: use URL
-    const res = await fetch('http://localhost:8080/transaction?take=1&offset=0');
-    if (!res.ok) throw new Error('Failed to fetch transactions')
-    return res.json()
-}
+export interface ResponseGetTransactionDTO extends ResponseGet<GetTransactionDTO> { }
 
-// export async function getPost(id: string) {
-//     const res = await fetch(`https://jsonplaceholder.typicode.com/posts/${id}`)
-//     if (!res.ok) throw new Error('Failed to fetch post')
-//     return res.json()
-// }
+export async function getTransactions(
+    take: number = 10,
+    offset: number = 0
+): Promise<ResponseGetTransactionDTO> {
+    const res = await fetch(`/api/transaction?take=${take}&offset=${offset}`);
+
+    if (!res.ok) {
+        throw new Error('Failed to fetch transactions');
+    }
+
+    return res.json();
+}
