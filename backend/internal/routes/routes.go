@@ -16,19 +16,19 @@ func RegisterRoutes(router *gin.Engine) {
 	// router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	//* Account
-	router.GET("/account", controllers.GetAllAccount)
-	router.GET("/account/:id", controllers.GetAccountById)
+	router.GET("/api/account", controllers.GetAllAccount)
+	router.GET("/api/account/:id", controllers.GetAccountById)
 
 	//* Transaction
-	router.GET("/transaction", controllers.GetAllTransaction)
-	router.GET("/transaction/:id", controllers.GetTransactionById)
-	router.POST("/transaction", controllers.InsertTransaction)
+	router.GET("/api/transaction", controllers.GetAllTransaction)
+	router.GET("/api/transaction/:id", controllers.GetTransactionById)
+	router.POST("/api/transaction", controllers.InsertTransaction)
 
 	//* Category
-	router.GET("/category", controllers.GetAllCategories)
-	router.GET("/category/:id", controllers.GetCategoryById)
-	router.POST("/category", controllers.CreateCategory)
-	router.DELETE("/category/:id", controllers.DeleteCategory)
+	router.GET("/api/category", controllers.GetAllCategories)
+	router.GET("/api/category/:id", controllers.GetCategoryById)
+	router.POST("/api/category", controllers.CreateCategory)
+	router.DELETE("/api/category/:id", controllers.DeleteCategory)
 
 	// Protected routes (Require authentication)
 	// api := router.Group("")
