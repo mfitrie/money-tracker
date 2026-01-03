@@ -42,7 +42,7 @@ export interface ResponseGetTransactionDTO extends ResponseGet<GetTransactionDTO
 
 export async function getTransactions() {
     //TODO: use URL
-    const res = await fetch('http://localhost:8080/tranaction?take=1&offset=0');
+    const res = await fetch('http://localhost:8080/transaction?take=1&offset=0');
     if (!res.ok) throw new Error('Failed to fetch transactions')
     return res.json()
 }
