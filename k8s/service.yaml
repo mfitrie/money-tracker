@@ -30,21 +30,19 @@ spec:
       targetPort: 8080
       protocol: TCP
       name: http
-
 ---
-# TODO: frontend
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: nextjs-service
-#   labels:
-#     app: nextjs-app
-# spec:
-#   type: ClusterIP
-#   selector:
-#     app: nextjs-app
-#   ports:
-#     - port: 80
-#       targetPort: 3000
-#       protocol: TCP
-#       name: http
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+  labels:
+    app: frontend
+spec:
+  type: ClusterIP
+  selector:
+    app: frontend
+  ports:
+    - port: 81
+      targetPort: 3000
+      protocol: TCP
+      name: http
