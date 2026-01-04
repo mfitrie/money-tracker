@@ -13,17 +13,19 @@ import (
 )
 
 func GetAllCategories(c *gin.Context) {
+	typeStr := c.Query("type")
 	takeStr := c.DefaultQuery("take", "10")
 	offsetStr := c.DefaultQuery("offset", "0")
 
-	take, err := strconv.Atoi(takeStr)
+	//------------------------------------------ Validation ------------------------------------------//
+	take, err := strconv.ParseInt(takeStr, 10, 64)
 	if err != nil || take <= 0 {
 		take = 10
 	}
 
-	skip, err := strconv.Atoi(offsetStr)
-	if err != nil || skip < 0 {
-		skip = 0
+	offset, err := strconv.ParseInt(offsetStr, 10, 64)
+	if err != nil || offset < 0 {
+		offset = 0
 	}
 
 	// Set max take
@@ -31,15 +33,28 @@ func GetAllCategories(c *gin.Context) {
 		take = 100
 	}
 
-	items, total, err := services.GetAllCategories(take, skip)
+	// Validate type if provided
+	if typeStr != "" && typeStr != "income" && typeStr != "expense" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "type must be either 'income' or 'expense'"})
+		return
+	}
+	//------------------------------------------ Validation ------------------------------------------//
+
+	payload := schemas.GetAllCategoryDTO{
+		Type:   typeStr,
+		Take:   take,
+		Offset: offset,
+	}
+
+	items, total, err := services.GetAllCategories(payload)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	// Calculate page and page_size from take and skip
-	pageSize := take
-	page := (skip / take) + 1
+	// Calculate pagination
+	pageSize := int(take)
+	page := int(offset/take) + 1
 	totalPages := int(math.Ceil(float64(total) / float64(take)))
 
 	c.JSON(http.StatusOK, gin.H{
@@ -51,7 +66,6 @@ func GetAllCategories(c *gin.Context) {
 			"total_pages": totalPages,
 		},
 	})
-
 }
 
 func CreateCategory(c *gin.Context) {

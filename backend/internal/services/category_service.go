@@ -4,14 +4,21 @@ import (
 	"fmt"
 	dbmodels "money-tracker/internal/db"
 	"money-tracker/internal/models"
+	"money-tracker/internal/schemas"
 )
 
-func GetAllCategories(take int, offset int) ([]models.Category, int64, error) {
+func GetAllCategories(payload schemas.GetAllCategoryDTO) ([]models.Category, int64, error) {
 	var items []models.Category
 	var total int64
 
+	// Build base query
+	query := dbmodels.DB.Model(&models.Category{})
+	// Apply type filter only if provided
+	if payload.Type != "" {
+		query = query.Where("type = ?", payload.Type)
+	}
 	// Get paginated results with take and skip
-	result := dbmodels.DB.Limit(take).Offset(offset).Order("created_at DESC").Find(&items)
+	result := query.Limit(int(payload.Take)).Offset(int(payload.Offset)).Order("created_at DESC").Find(&items)
 	if result.Error != nil {
 		return nil, 0, result.Error
 	}
