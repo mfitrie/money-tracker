@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
 
     try {
         const res = await fetch(
-            `http://localhost:8080/api/transaction?take=${take}&offset=${offset}`,
+            `${process.env.NEXT_PUBLIC_API_URL}/api/transaction?take=${take}&offset=${offset}`,
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
         const body = await request.json(); // Parse the request body first
 
         const res = await fetch(
-            `http://localhost:8080/api/transaction`,
+            `${process.env.NEXT_PUBLIC_API_URL}/api/transaction`,
             {
                 method: 'POST', // Don't forget this!
                 headers: {

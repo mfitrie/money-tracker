@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
 
     try {
         const res = await fetch(
-            `http://localhost:8080/api/category?${params.toString()}`,
+            `${process.env.NEXT_PUBLIC_API_URL}/api/category?${params.toString()}`,
             {
                 headers: {
                     'Content-Type': 'application/json',
