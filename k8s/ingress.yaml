@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nextjs-ingress
+  labels:
+    app: nextjs-app
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    # Uncomment if using cert-manager for SSL
+    # cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: money-tracker
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: nextjs-service
+                port:
+                  number: 80
+      # TODO: frontend
+  # Uncomment for SSL/TLS
+  # tls:
+  # - hosts:
+  #   - portfolio-web
+  #   secretName: nextjs-tls

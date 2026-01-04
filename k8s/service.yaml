@@ -1,0 +1,50 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-service
+  labels:
+    app: postgres
+spec:
+  type: ClusterIP
+  selector:
+    app: postgres
+  ports:
+    - port: 5432
+      targetPort: 5432
+      protocol: TCP
+      name: postgres
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+  labels:
+    app: backend-api
+spec:
+  type: ClusterIP
+  selector:
+    app: backend-api
+  ports:
+    - port: 80
+      targetPort: 8080
+      protocol: TCP
+      name: http
+
+---
+# TODO: frontend
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: nextjs-service
+#   labels:
+#     app: nextjs-app
+# spec:
+#   type: ClusterIP
+#   selector:
+#     app: nextjs-app
+#   ports:
+#     - port: 80
+#       targetPort: 3000
+#       protocol: TCP
+#       name: http
