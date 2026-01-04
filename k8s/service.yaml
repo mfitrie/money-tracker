@@ -4,11 +4,11 @@ kind: Service
 metadata:
   name: postgres-service
   labels:
-    app: postgres
+    app: money-tracker
 spec:
   type: ClusterIP
   selector:
-    app: postgres
+    app: money-tracker
   ports:
     - port: 5432
       targetPort: 5432
@@ -20,11 +20,11 @@ kind: Service
 metadata:
   name: backend-service
   labels:
-    app: backend-api
+    app: money-tracker
 spec:
   type: ClusterIP
   selector:
-    app: backend-api
+    app: money-tracker
   ports:
     - port: 80
       targetPort: 8080
@@ -36,11 +36,11 @@ kind: Service
 metadata:
   name: frontend-service
   labels:
-    app: frontend
+    app: money-tracker
 spec:
   type: ClusterIP
   selector:
-    app: frontend
+    app: money-tracker
   ports:
     - port: 81
       targetPort: 3000

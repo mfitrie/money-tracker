@@ -1,9 +1,9 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: nextjs-ingress
+  name: ingress-money-tracker
   labels:
-    app: nextjs-app
+    app: money-tracker
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
     # Uncomment if using cert-manager for SSL

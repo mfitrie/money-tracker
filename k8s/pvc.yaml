@@ -3,7 +3,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: postgres-pvc
   labels:
-    app: postgres
+    app: money-tracker
 spec:
   accessModes:
     - ReadWriteOnce
