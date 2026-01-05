@@ -4,6 +4,7 @@ metadata:
   name: postgres
   labels:
     app: money-tracker
+    component: postgres
 spec:
   serviceName: postgres-service
   replicas: 1
@@ -14,6 +15,7 @@ spec:
     metadata:
       labels:
         app: money-tracker
+        component: postgres
     spec:
       containers:
         - name: postgres

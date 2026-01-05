@@ -4,8 +4,8 @@ metadata:
   name: ingress-money-tracker
   labels:
     app: money-tracker
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+  # annotations:
+  #   nginx.ingress.kubernetes.io/rewrite-target: /
     # Uncomment if using cert-manager for SSL
     # cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:

@@ -9,6 +9,7 @@ spec:
   type: ClusterIP
   selector:
     app: money-tracker
+    component: postgres
   ports:
     - port: 5432
       targetPort: 5432
@@ -25,6 +26,7 @@ spec:
   type: ClusterIP
   selector:
     app: money-tracker
+    component: backend
   ports:
     - port: 80
       targetPort: 8080
@@ -41,6 +43,7 @@ spec:
   type: ClusterIP
   selector:
     app: money-tracker
+    component: frontend
   ports:
     - port: 81
       targetPort: 3000
