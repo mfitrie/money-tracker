@@ -17,7 +17,14 @@ func GetAllTransaction(take int, offset int) ([]models.Transaction, int64, error
 	}
 
 	// Get paginated results with take and skip
-	result := dbmodels.DB.Limit(take).Offset(offset).Order("created_at DESC").Find(&transactions)
+	result := dbmodels.DB.
+		Preload("Account").
+		Preload("Account.User"). // If you need nested user data
+		Preload("Category").
+		Limit(take).
+		Offset(offset).
+		Order("created_at DESC").
+		Find(&transactions)
 	if result.Error != nil {
 		return nil, 0, result.Error
 	}
