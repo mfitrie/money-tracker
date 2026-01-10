@@ -150,7 +150,7 @@ export default function HomePage() {
                   render={({ field, fieldState }) => (
                     <div className='flex flex-col gap-1'>
                       <div className="relative">
-                        <span className="-translate-y-1/2 absolute top-1/2 left-2 h-3 w-3 text-muted-foreground">RM </span>
+                        <span className="-translate-y-3 absolute top-1/2 left-2 h-3 w-3 text-muted-foreground">RM </span>
                         <Input
                           className="bg-background pl-9"
                           id="currency-input"
