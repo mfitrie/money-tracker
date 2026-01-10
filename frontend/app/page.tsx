@@ -6,7 +6,7 @@ import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import CustomBreadcrumb from '@/components/other-component/custom-breadcrumb'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { createTransaction, getTransactions, ResponseGetTransactionDTO } from '@/lib/queries/transaction'
 import dayjs from "dayjs";
@@ -96,9 +96,7 @@ export default function HomePage() {
     data: CreateTransactionDTO
   ) {
     createTransactionMutation(data);
-
   };
-
 
 
 
@@ -152,7 +150,7 @@ export default function HomePage() {
                   render={({ field, fieldState }) => (
                     <div className='flex flex-col gap-1'>
                       <div className="relative">
-                        <span className="-translate-y-1/2 absolute top-1/2 left-2 h-3 w-3 text-muted-foreground">RM </span>
+                        <span className="-translate-y-3 absolute top-1/2 left-2 h-3 w-3 text-muted-foreground">RM </span>
                         <Input
                           className="bg-background pl-9"
                           id="currency-input"
@@ -279,6 +277,7 @@ export default function HomePage() {
                   <TableHeader>
                     <TableRow>
                       <TableHead>Type</TableHead>
+                      <TableHead>Category</TableHead>
                       <TableHead>Description</TableHead>
                       <TableHead>Date</TableHead>
                       <TableHead>Amount (RM)</TableHead>
@@ -291,7 +290,7 @@ export default function HomePage() {
                           <TableCell>
                             {
                               (() => {
-                                switch(item.type){
+                                switch (item.type) {
                                   case "income": {
                                     return (
                                       <Badge>Income</Badge>
@@ -303,6 +302,16 @@ export default function HomePage() {
                                     )
                                   }
                                 }
+                              })()
+                            }
+                          </TableCell>
+                          <TableCell>
+                            {
+                              (() => {
+                                const category = categoryData?.data.find(category => category.id === item.category_id)?.name;
+                                return (
+                                  <Badge>{category}</Badge>
+                                )
                               })()
                             }
                           </TableCell>

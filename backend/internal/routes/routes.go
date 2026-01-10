@@ -15,6 +15,8 @@ func RegisterRoutes(router *gin.Engine) {
 	// docs.SwaggerInfo.BasePath = "/"
 	// router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
+	//TODO: login
+
 	//* Health
 	router.GET("/api/health", controllers.GetHealth)
 

@@ -2,16 +2,13 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: ingress-money-tracker
+  namespace: default
   labels:
     app: money-tracker
-  # annotations:
-  #   nginx.ingress.kubernetes.io/rewrite-target: /
-    # Uncomment if using cert-manager for SSL
-    # cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   ingressClassName: nginx
   rules:
-    - host: money-tracker
+    - host: money-tracker.fitrie-server.xyz
       http:
         paths:
           - path: /
@@ -28,8 +25,3 @@ spec:
                 name: backend-service
                 port:
                   number: 80
-  # Uncomment for SSL/TLS
-  # tls:
-  # - hosts:
-  #   - portfolio-web
-  #   secretName: nextjs-tls
