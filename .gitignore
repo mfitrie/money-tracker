@@ -1,3 +1,4 @@
+#--------------------------------------------------Backend
 # Binaries for programs and plugins
 *.exe
 *.exe~
@@ -62,7 +63,7 @@ tmp/
 
 
 
-
+#--------------------------------------------------Frontend
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
@@ -104,3 +105,7 @@ frontend/.vercel
 # typescript
 *.tsbuildinfo
 frontend/next-env.d.ts
+
+
+#--------------------------------------------------K8s
+**/secret.yaml
