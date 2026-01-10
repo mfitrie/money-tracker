@@ -277,6 +277,7 @@ export default function HomePage() {
                   <TableHeader>
                     <TableRow>
                       <TableHead>Type</TableHead>
+                      <TableHead>Category</TableHead>
                       <TableHead>Description</TableHead>
                       <TableHead>Date</TableHead>
                       <TableHead>Amount (RM)</TableHead>
@@ -301,6 +302,16 @@ export default function HomePage() {
                                     )
                                   }
                                 }
+                              })()
+                            }
+                          </TableCell>
+                          <TableCell>
+                            {
+                              (() => {
+                                const category = categoryData?.data.find(category => category.id === item.category_id)?.name;
+                                return (
+                                  <Badge>{category}</Badge>
+                                )
                               })()
                             }
                           </TableCell>
