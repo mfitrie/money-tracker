@@ -6,7 +6,7 @@ import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import CustomBreadcrumb from '@/components/other-component/custom-breadcrumb'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { createTransaction, getTransactions, ResponseGetTransactionDTO } from '@/lib/queries/transaction'
 import dayjs from "dayjs";
@@ -96,9 +96,7 @@ export default function HomePage() {
     data: CreateTransactionDTO
   ) {
     createTransactionMutation(data);
-
   };
-
 
 
 
@@ -291,7 +289,7 @@ export default function HomePage() {
                           <TableCell>
                             {
                               (() => {
-                                switch(item.type){
+                                switch (item.type) {
                                   case "income": {
                                     return (
                                       <Badge>Income</Badge>
