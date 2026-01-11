@@ -9,7 +9,7 @@ import (
 )
 
 func GetTodaysSpend(c *gin.Context) {
-	result, err := services.GetTodaysSpend()
+	total, categorySpend, err := services.GetTodaysSpend()
 
 	if err != nil {
 		fmt.Println(err.Error())
@@ -20,6 +20,7 @@ func GetTodaysSpend(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"data": result,
+		"data":       total,
+		"categories": categorySpend,
 	})
 }
