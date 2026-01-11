@@ -13,7 +13,7 @@ type Transaction struct {
 	Amount          float64   `gorm:"type:decimal(10,2);not null" json:"amount"`
 	Type            string    `gorm:"not null;size:50;check:type IN ('income', 'expense')" json:"type"` // "income" or "expense"
 	Description     *string   `gorm:"type:text" json:"description"`
-	TransactionDate time.Time `gorm:"type:date;not null;index:idx_transactions_date" json:"transaction_date"`
+	TransactionDate time.Time `gorm:"autoCreateTime" json:"transaction_date"`
 	CreatedAt       time.Time `gorm:"autoCreateTime" json:"created_at"`
 	UpdatedAt       time.Time `gorm:"autoUpdateTime" json:"updated_at"`
 
