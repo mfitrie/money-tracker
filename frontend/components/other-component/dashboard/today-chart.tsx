@@ -20,80 +20,49 @@ import { formatRMCurrency } from "@/utils/utils"
 import { getTodaysExpense, GetTodaysExpenseDTO } from "@/lib/queries/dashboard"
 import { useQuery } from "@tanstack/react-query"
 import { Spinner } from "@/components/ui/spinner"
+import { useEffect, useState } from "react"
 
-export const description = "A pie chart with a label"
-
-// const chartData = [
-//     { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
-//     { browser: "safari", visitors: 200, fill: "var(--color-safari)" },
-//     { browser: "firefox", visitors: 187, fill: "var(--color-firefox)" },
-//     { browser: "edge", visitors: 173, fill: "var(--color-edge)" },
-//     { browser: "other", visitors: 90, fill: "var(--color-other)" },
-// ]
-
-// const chartConfig = {
-//     visitors: {
-//         label: "Visitors",
-//     },
-//     chrome: {
-//         label: "Chrome",
-//         color: "var(--chart-1)",
-//     },
-//     safari: {
-//         label: "Safari",
-//         color: "var(--chart-2)",
-//     },
-//     firefox: {
-//         label: "Firefox",
-//         color: "var(--chart-3)",
-//     },
-//     edge: {
-//         label: "Edge",
-//         color: "var(--chart-4)",
-//     },
-//     other: {
-//         label: "Other",
-//         color: "var(--chart-5)",
-//     },
-// } satisfies ChartConfig
-
-export interface TodaysChartProps {
-    listData: {
-        category: string,
-        spend: number,
-        color: string,
-    }[]
-}
+// export const description = "A pie chart with a label"
 
 
 
-export function TodaysChart(payload: TodaysChartProps) {
+export function TodaysChart() {
+    const [config, setConfig] = useState<ChartConfig | null>(null);
+
     const { data: todaysExpenseData, isLoading: isLoadingTodaysExpense, error: errorTodaysExpense } = useQuery<GetTodaysExpenseDTO>({
         queryKey: ['getTodaysExpense'],
         queryFn: () => getTodaysExpense(),
     });
 
+    //* ------------------------------- useEffect ------------------------------- *//
+    useEffect(() => {
+        if(isLoadingTodaysExpense){
+            return;
+        }
+        if (!todaysExpenseData?.data) {
+            return;
+        }
+        setConfig(generateChartConfig(todaysExpenseData as any));
+    }, [isLoadingTodaysExpense, todaysExpenseData])
+    //* ------------------------------- useEffect ------------------------------- *//
+
+
     //* ------------------------------- Utils ------------------------------- *//
-    function generateChartConfig(listData: TodaysChartProps['listData']): ChartConfig {
+    function generateChartConfig(data: GetTodaysExpenseDTO): ChartConfig {
         const config: ChartConfig = {}
-        listData.forEach((item) => {
-            config[item.category] = {
-                label: item.category,
-                color: item.color,  // Use the actual color from data
+        data.categories.forEach((item) => {
+            config[item.name] = {
+                label: item.name,
+                color: item.color,
             }
         });
         return config;
     }
-    const config = generateChartConfig(payload.listData.map(item => ({
-        category: item.category,
-        spend: item.spend,
-        color: item.color
-    })));
 
     // Transform data to include fill property for the pie chart
-    const chartData = payload.listData.map(item => ({
+    const chartData = todaysExpenseData?.categories.map(item => ({
         ...item,
-        fill: `var(--color-${item.category})`,
+        fill: item.color,
     }));
     //* ------------------------------- Utils ------------------------------- *//
 
@@ -112,7 +81,7 @@ export function TodaysChart(payload: TodaysChartProps) {
                     <Spinner />
                 )
             }{
-                !isLoadingTodaysExpense && (
+                !isLoadingTodaysExpense && config && (
                     <Card className="flex flex-col">
                         <CardHeader className="items-center pb-0">
                             <CardTitle>Today's Expenditure</CardTitle>
@@ -125,7 +94,7 @@ export function TodaysChart(payload: TodaysChartProps) {
                             >
                                 <PieChart>
                                     <ChartTooltip content={<ChartTooltipContent hideLabel />} />
-                                    <Pie data={chartData} dataKey="spend" label nameKey="category" />
+                                    <Pie data={chartData} dataKey="total" label nameKey="name" />
                                 </PieChart>
                             </ChartContainer>
                         </CardContent>

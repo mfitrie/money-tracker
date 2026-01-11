@@ -4,6 +4,11 @@ import { CreateTransactionDTO } from "@/validation/transaction";
 
 export interface GetTodaysExpenseDTO {
     data: number,
+    categories: {
+        name: string,
+        color: string,
+        total: number
+    }[],
 }
 
 
