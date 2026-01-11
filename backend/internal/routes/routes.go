@@ -20,6 +20,9 @@ func RegisterRoutes(router *gin.Engine) {
 	//* Health
 	router.GET("/api/health", controllers.GetHealth)
 
+	//* Dashboard
+	router.GET("/api/dashboard/todaysspend", controllers.GetTodaysSpend)
+
 	//* Account
 	router.GET("/api/account", controllers.GetAllAccount)
 	router.GET("/api/account/:id", controllers.GetAccountById)
