@@ -14,7 +14,7 @@ export interface GetTodaysExpenseDTO {
 
 
 export async function getTodaysExpense(): Promise<GetTodaysExpenseDTO> {
-    const res = await fetch('/api/dashboard');
+    const res = await fetch('/api/dashboard/todaysspend');
     if (!res.ok) {
         throw new Error("Failed to fetch today's expense");
     }
