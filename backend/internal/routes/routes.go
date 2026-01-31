@@ -11,13 +11,13 @@ func RegisterRoutes(router *gin.Engine) {
 	//* Public routes (No authentication required)
 
 	// Auth
-	router.POST("/api/auth/login", controllers.LoginHandler)
+	router.POST("/backend-api/auth/login", controllers.LoginHandler)
 
 	// Health
-	router.GET("/api/health", controllers.GetHealth)
+	router.GET("/backend-api/health", controllers.GetHealth)
 
 	//* Protected routes (Require authentication)
-	protected := router.Group("/api")
+	protected := router.Group("/backend-api")
 	protected.Use(middleware.JWTAuthMiddleware())
 	{
 		// Dashboard

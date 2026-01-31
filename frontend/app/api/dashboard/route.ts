@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
 
     try {
         const res = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/dashboard/todaysspend`,
+            `${process.env.NEXT_PUBLIC_API_URL}/backend-api/dashboard/todaysspend`,
             {
                 headers: {
                     'Content-Type': 'application/json',
