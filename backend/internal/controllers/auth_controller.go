@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"fmt"
-	"money-tracker/internal/schemas"
 	"money-tracker/internal/services"
 	"net/http"
 
@@ -10,25 +9,46 @@ import (
 )
 
 func LoginHandler(c *gin.Context) {
-	var user schemas.User
-	if err := c.ShouldBindJSON(&user); err != nil {
+	var input struct {
+		Username string `json:"username" binding:"required"`
+		Password string `json:"password" binding:"required"`
+	}
+
+	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body"})
 		return
 	}
 
-	fmt.Printf("The user request value %v", user)
-
-	if user.Username == "admin" && user.Password == "12345" {
-		tokenString, err := services.CreateToken(user.Username)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-			fmt.Errorf("No username found")
-		}
-		c.JSON(http.StatusOK, gin.H{"access_token": tokenString})
+	// Get user by username
+	user, err := services.GetUserByUsername(input.Username)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
 		return
-	} else {
-		c.JSON(http.StatusUnauthorized, gin.H{"message": "You not allowed"})
 	}
+
+	// Verify password
+	if err := services.VerifyPassword(user.Password, input.Password); err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
+		return
+	}
+
+	// Create token
+	tokenString, err := services.CreateToken(user.Username)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create token"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"access_token": tokenString,
+		"token_type":   "Bearer",
+		"user": gin.H{
+			"id":       user.ID,
+			"username": user.Username,
+			"email":    user.Email,
+			"name":     user.Name,
+		},
+	})
 }
 
 func ProtectedHandler(c *gin.Context) {
