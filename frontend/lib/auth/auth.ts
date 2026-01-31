@@ -16,7 +16,8 @@ export const authOptions: NextAuthOptions = {
 
                 try {
                     // Call your Go API
-                    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/backend-api/auth/login`, {
+                    const BASE_URL = process.env.API_URL;
+                    const res = await fetch(`${BASE_URL}/backend-api/auth/login`, {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",

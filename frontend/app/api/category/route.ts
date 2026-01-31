@@ -3,6 +3,8 @@ import { authOptions } from '@/lib/auth/auth';
 import { getServerSession } from 'next-auth';
 import { NextRequest } from 'next/server';
 
+const BASE_URL = process.env.API_URL;
+
 export async function GET(request: NextRequest) {
     const session = await getServerSession(authOptions);
     const searchParams = request.nextUrl.searchParams;
@@ -20,7 +22,7 @@ export async function GET(request: NextRequest) {
 
     try {
         const res = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/backend-api/category?${params.toString()}`,
+            `${BASE_URL}/backend-api/category?${params.toString()}`,
             {
                 headers: {
                     'Content-Type': 'application/json',

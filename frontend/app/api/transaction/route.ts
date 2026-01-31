@@ -3,6 +3,8 @@ import { authOptions } from '@/lib/auth/auth';
 import { getServerSession } from 'next-auth';
 import { NextRequest } from 'next/server';
 
+const BASE_URL = process.env.API_URL;
+
 export async function GET(request: NextRequest) {
     const session = await getServerSession(authOptions);
 
@@ -12,7 +14,7 @@ export async function GET(request: NextRequest) {
 
     try {
         const res = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/backend-api/transaction?take=${take}&offset=${offset}`,
+            `${BASE_URL}/backend-api/transaction?take=${take}&offset=${offset}`,
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -46,7 +48,7 @@ export async function POST(request: NextRequest) {
         const body = await request.json(); // Parse the request body first
 
         const res = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/backend-api/transaction`,
+            `${BASE_URL}/backend-api/transaction`,
             {
                 method: 'POST', // Don't forget this!
                 headers: {
