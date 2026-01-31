@@ -1,7 +1,10 @@
 // app/api/transaction/route.ts
+import { authOptions } from '@/lib/auth/auth';
+import { getServerSession } from 'next-auth';
 import { NextRequest } from 'next/server';
 
 export async function GET(request: NextRequest) {
+    const session = await getServerSession(authOptions);
     const searchParams = request.nextUrl.searchParams;
     const type = searchParams.get('type');
     const take = searchParams.get('take') || '10';
@@ -21,7 +24,7 @@ export async function GET(request: NextRequest) {
             {
                 headers: {
                     'Content-Type': 'application/json',
-                    // Add auth headers if needed
+                    Authorization: `Bearer ${session?.accessToken}`,
                 },
             }
         );
