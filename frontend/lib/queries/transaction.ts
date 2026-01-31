@@ -53,7 +53,9 @@ export async function getTransactions(
 }
 
 
-export async function createTransaction(payload: CreateTransactionDTO): Promise<any> {
+export async function createTransaction(
+    payload: CreateTransactionDTO
+): Promise<any> {
     const res = await fetch('/api/transaction', {
         method: 'POST',
         headers: {

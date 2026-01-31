@@ -1,7 +1,11 @@
 // app/api/transaction/route.ts
+import { authOptions } from '@/lib/auth/auth';
+import { getServerSession } from 'next-auth';
 import { NextRequest } from 'next/server';
 
 export async function GET(request: NextRequest) {
+    const session = await getServerSession(authOptions);
+
     const searchParams = request.nextUrl.searchParams;
     const take = searchParams.get('take') || '10';
     const offset = searchParams.get('offset') || '0';
@@ -12,7 +16,7 @@ export async function GET(request: NextRequest) {
             {
                 headers: {
                     'Content-Type': 'application/json',
-                    // Add auth headers if needed
+                    Authorization: `Bearer ${session?.accessToken}`,
                 },
             }
         );
@@ -36,6 +40,8 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+    const session = await getServerSession(authOptions);
+
     try {
         const body = await request.json(); // Parse the request body first
 
@@ -45,6 +51,7 @@ export async function POST(request: NextRequest) {
                 method: 'POST', // Don't forget this!
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: `Bearer ${session?.accessToken}`,
                 },
                 body: JSON.stringify(body) // Stringify the parsed body
             }

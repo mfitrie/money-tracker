@@ -21,9 +21,13 @@ import { Controller, useForm } from "react-hook-form";
 import { CreateTransactionDTO, CreateTransactionDTOSchema } from '@/validation/transaction'
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Badge } from '@/components/ui/badge'
+import { useSession } from 'next-auth/react'
+import { redirect } from 'next/navigation'
 
 
 export default function HomePage() {
+  const { data: session, status } = useSession();
+
   //----------------------------------- useState -----------------------------------//
   const [currentPageTransaction, setCurrentPageTransaction] = useState(1);
   const itemsPerPageTransaction = 10; // Adjust as needed
@@ -51,6 +55,15 @@ export default function HomePage() {
   });
   const currentType = watch('type');
   //----------------------------------- useForm -----------------------------------//
+
+  //----------------------------------- useEffect -----------------------------------//
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      redirect('/login');
+    }
+  }, [session, status]);
+  //----------------------------------- useEffect -----------------------------------//
+
 
   //----------------------------------- Query -----------------------------------//
   const queryClient = useQueryClient();

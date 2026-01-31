@@ -8,6 +8,8 @@ import { ThemeProvider } from "@/components/other-component/themes-provider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Providers from "@/hooks/providers";
 import { Toaster } from "@/components/ui/sonner";
+import { SessionProvider } from "next-auth/react";
+import NextAuthProvider from "@/components/providers/session-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,46 +36,48 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Toaster position="top-right" richColors />
-        <Providers>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <SidebarProvider>
-              <AppSidebar />
-              <main className="w-full flex flex-col min-h-screen ">
-                <Navbar />
-                <div className="flex-1 px-4">
-                  {children}
-                </div>
+        <NextAuthProvider>
+          <Toaster position="top-right" richColors />
+          <Providers>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <SidebarProvider>
+                <AppSidebar />
+                <main className="w-full flex flex-col min-h-screen ">
+                  <Navbar />
+                  <div className="flex-1 px-4">
+                    {children}
+                  </div>
 
-                <footer className="border-t mt-auto">
-                  <div className="px-4 py-6 md:py-8">
-                    <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-                      <div className="text-sm text-muted-foreground">
-                        © {new Date().getFullYear()} Money Tracker. All rights reserved.
-                      </div>
-                      <div className="flex gap-6 text-sm">
-                        <a href="/privacy" className="text-muted-foreground hover:text-foreground transition-colors">
-                          Privacy Policy
-                        </a>
-                        <a href="/terms" className="text-muted-foreground hover:text-foreground transition-colors">
-                          Terms of Service
-                        </a>
-                        <a href="/contact" className="text-muted-foreground hover:text-foreground transition-colors">
-                          Contact
-                        </a>
+                  <footer className="border-t mt-auto">
+                    <div className="px-4 py-6 md:py-8">
+                      <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+                        <div className="text-sm text-muted-foreground">
+                          © {new Date().getFullYear()} Money Tracker. All rights reserved.
+                        </div>
+                        <div className="flex gap-6 text-sm">
+                          <a href="/privacy" className="text-muted-foreground hover:text-foreground transition-colors">
+                            Privacy Policy
+                          </a>
+                          <a href="/terms" className="text-muted-foreground hover:text-foreground transition-colors">
+                            Terms of Service
+                          </a>
+                          <a href="/contact" className="text-muted-foreground hover:text-foreground transition-colors">
+                            Contact
+                          </a>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </footer>
-              </main>
-            </SidebarProvider>
-          </ThemeProvider>
-        </Providers>
+                  </footer>
+                </main>
+              </SidebarProvider>
+            </ThemeProvider>
+          </Providers>
+        </NextAuthProvider>
       </body>
     </html>
   );
