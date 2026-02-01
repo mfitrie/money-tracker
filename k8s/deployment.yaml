@@ -33,11 +33,7 @@ spec:
       containers:
         - name: backend-api
           image: hzkxh7gn0m/money-tracker-api:0.1.0
-<<<<<<< HEAD
-          imagePullPolicy: Always 
-=======
           imagePullPolicy: Always
->>>>>>> develop
           ports:
             - containerPort: 8080
               name: http
@@ -87,11 +83,7 @@ spec:
       containers:
         - name: frontend
           image: hzkxh7gn0m/money-tracker-frontend:0.1.0
-<<<<<<< HEAD
-          imagePullPolicy: Always 
-=======
           imagePullPolicy: Always
->>>>>>> develop
           ports:
             - containerPort: 3000
               name: http
