@@ -1,0 +1,12 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: money-tracker-cert
+  namespace: money-tracker 
+spec:
+  secretName: money-tracker-tls
+  dnsNames:
+    - money-tracker.fitrie-server.xyz
+  issuerRef:
+    name: letsencrypt-dns
+    kind: ClusterIssuer
