@@ -12,4 +12,3 @@ spec:
   resources:
     requests:
       storage: 5Gi
-  # Docker Desktop automatically provisions PV, no need to create one manually
