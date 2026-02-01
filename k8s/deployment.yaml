@@ -33,7 +33,11 @@ spec:
       containers:
         - name: backend-api
           image: hzkxh7gn0m/money-tracker-api:0.1.0
+<<<<<<< HEAD
           imagePullPolicy: Always 
+=======
+          imagePullPolicy: Always
+>>>>>>> develop
           ports:
             - containerPort: 8080
               name: http
@@ -50,13 +54,13 @@ spec:
               cpu: "500m"
           livenessProbe:
             httpGet:
-              path: /api/health
+              path: /backend-api/health
               port: 8080
             initialDelaySeconds: 30
             periodSeconds: 10
           readinessProbe:
             httpGet:
-              path: /api/health
+              path: /backend-api/health
               port: 8080
             initialDelaySeconds: 10
             periodSeconds: 5
@@ -83,7 +87,11 @@ spec:
       containers:
         - name: frontend
           image: hzkxh7gn0m/money-tracker-frontend:0.1.0
+<<<<<<< HEAD
           imagePullPolicy: Always 
+=======
+          imagePullPolicy: Always
+>>>>>>> develop
           ports:
             - containerPort: 3000
               name: http

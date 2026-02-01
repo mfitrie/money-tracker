@@ -50,4 +50,5 @@ services:
 
 volumes:
   postgres_data:
+    name: money-tracker_postgres_data
     driver: local

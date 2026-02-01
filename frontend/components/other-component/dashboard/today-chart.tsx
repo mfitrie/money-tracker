@@ -21,6 +21,8 @@ import { getTodaysExpense, GetTodaysExpenseDTO } from "@/lib/queries/dashboard"
 import { useQuery } from "@tanstack/react-query"
 import { Spinner } from "@/components/ui/spinner"
 import { useEffect, useState } from "react"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { AlertCircle } from "lucide-react"
 
 // export const description = "A pie chart with a label"
 
@@ -36,7 +38,7 @@ export function TodaysChart() {
 
     //* ------------------------------- useEffect ------------------------------- *//
     useEffect(() => {
-        if(isLoadingTodaysExpense){
+        if (isLoadingTodaysExpense) {
             return;
         }
         if (!todaysExpenseData?.data) {
@@ -60,7 +62,7 @@ export function TodaysChart() {
     }
 
     // Transform data to include fill property for the pie chart
-    const chartData = todaysExpenseData?.categories.map(item => ({
+    const chartData = todaysExpenseData?.categories?.map(item => ({
         ...item,
         fill: item.color,
     }));
@@ -80,7 +82,8 @@ export function TodaysChart() {
                 isLoadingTodaysExpense && (
                     <Spinner />
                 )
-            }{
+            }
+            {
                 !isLoadingTodaysExpense && config && (
                     <Card className="flex flex-col">
                         <CardHeader className="items-center pb-0">
@@ -104,6 +107,16 @@ export function TodaysChart() {
                             </div>
                         </CardFooter>
                     </Card>
+                )
+            }
+            {
+                (!isLoadingTodaysExpense) && (!chartData) && (
+                    <div>
+                        <Alert variant="destructive">
+                            <AlertCircle className="h-4 w-4" />
+                            <AlertDescription>No today's spend</AlertDescription>
+                        </Alert>
+                    </div>
                 )
             }
         </div>
