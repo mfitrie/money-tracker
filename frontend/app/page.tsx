@@ -338,7 +338,7 @@ export default function HomePage() {
                               })()
                             }
                           </TableCell>
-                          <TableCell>{dayjs(item.created_at).format("D/M/YYYY")}</TableCell>
+                          <TableCell>{dayjs(item.transaction_date).format("D/M/YYYY")}</TableCell>
                           <TableCell>{formatRMCurrency(item.amount, false)}</TableCell>
                         </TableRow>
                       ))

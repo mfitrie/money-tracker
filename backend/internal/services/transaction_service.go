@@ -23,7 +23,7 @@ func GetAllTransaction(take int, offset int) ([]models.Transaction, int64, error
 		Preload("Category").
 		Limit(take).
 		Offset(offset).
-		Order("created_at DESC").
+		Order("transaction_date DESC").
 		Find(&transactions)
 	if result.Error != nil {
 		return nil, 0, result.Error
@@ -50,6 +50,12 @@ func InsertTransaction(input schemas.InsertTransaction) (*models.Transaction, er
 		Type:        input.Type,
 		Description: input.Description,
 	}
+
+	// Only set TransactionDate if it was provided in the input
+	if input.TransactionDate != nil {
+		newTransaction.TransactionDate = *input.TransactionDate
+	}
+
 	err := dbmodels.DB.Create(&newTransaction).Error
 	if err != nil {
 		return nil, fmt.Errorf("Error inserting transaction: %v", err)
