@@ -44,14 +44,17 @@ func GetTransactionById(id string) (models.Transaction, error) {
 
 func InsertTransaction(input schemas.InsertTransaction) (*models.Transaction, error) {
 	newTransaction := models.Transaction{
-		AccountID:   input.AccountID,
-		CategoryID:  input.CategoryID,
-		Amount:      input.Amount,
-		Type:        input.Type,
-		Description: input.Description,
+		AccountID:  input.AccountID,
+		CategoryID: input.CategoryID,
+		Amount:     input.Amount,
+		Type:       input.Type,
 	}
 
 	// Only set TransactionDate if it was provided in the input
+	if input.Description != nil {
+		newTransaction.Description = input.Description
+	}
+
 	if input.TransactionDate != nil {
 		newTransaction.TransactionDate = *input.TransactionDate
 	}

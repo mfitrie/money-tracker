@@ -16,19 +16,22 @@ import { toast } from 'sonner'
 import { getCatogories, ResponseGetCategoryDTO } from '@/lib/queries/category'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { Plus } from 'lucide-react'
+import { ChevronDownIcon, Plus, RotateCcw } from 'lucide-react'
 import { Controller, useForm } from "react-hook-form";
 import { CreateTransactionDTO, CreateTransactionDTOSchema } from '@/validation/transaction'
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Badge } from '@/components/ui/badge'
 import { useSession } from 'next-auth/react'
 import { redirect } from 'next/navigation'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Calendar } from '@/components/ui/calendar'
 
 
 export default function HomePage() {
   const { data: session, status } = useSession();
 
   //----------------------------------- useState -----------------------------------//
+  const [date, setDate] = useState<Date>()
   const [currentPageTransaction, setCurrentPageTransaction] = useState(1);
   const itemsPerPageTransaction = 10; // Adjust as needed
   const offsetPageTransaction = (currentPageTransaction - 1) * itemsPerPageTransaction
@@ -50,7 +53,6 @@ export default function HomePage() {
       category_id: "",
       amount: undefined,
       type: "expense",
-      description: "",
     },
   });
   const currentType = watch('type');
@@ -230,21 +232,60 @@ export default function HomePage() {
                   }
                 </div>
 
-                <div>
-                  <Controller
-                    name="description"
-                    control={control}
-                    render={({ field }) => (
-                      <Textarea
-                        {...field}
-                        placeholder="Description (Optional)"
-                      />
-                    )}
-                  />
-                </div>
+                <Controller
+                  name="transaction_date"
+                  control={control}
+                  render={({ field, fieldState }) => (
+                    <div className="flex flex-col gap-2">
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant="outline"
+                            data-empty={!field.value}
+                            className="data-[empty=true]:text-muted-foreground justify-between text-left font-normal"
+                          >
+                            {field.value ? dayjs(field.value).format('D/M/YYYY') : <span>Pick a date (Optional)</span>}
+                            <ChevronDownIcon />
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          {/* //TODO: add time */}
+                          <Calendar
+                            mode="single"
+                            selected={field.value ? new Date(field.value) : undefined}
+                            onSelect={(date) => {
+                              if (date) {
+                                field.onChange(date.toISOString());
+                              } else {
+                                field.onChange(undefined);
+                              }
+                            }}
+                            defaultMonth={field.value ? new Date(field.value) : undefined}
+                          // TODO: add max date
+                          />
+                        </PopoverContent>
+                      </Popover>
+                      {fieldState.error && (
+                        <p className="text-xs text-destructive">{fieldState.error.message}</p>
+                      )}
+                    </div>
+                  )}
+                />
+
+                <Controller
+                  name="description"
+                  control={control}
+                  render={({ field }) => (
+                    <Textarea
+                      className='text-sm'
+                      {...field}
+                      placeholder="Description (Optional)"
+                    />
+                  )}
+                />
               </div>
             </CardContent>
-            <CardFooter className='flex flex-col'>
+            <CardFooter className='flex flex-col gap-4'>
               <Button
                 className='w-full cursor-pointer flex flex-row items-center justify-center'
                 disabled={isPendingCreateTransaction}
@@ -261,6 +302,18 @@ export default function HomePage() {
                     <Plus />
                   )
                 }
+              </Button>
+              <Button
+                className='w-full cursor-pointer flex flex-row items-center justify-center'
+                disabled={isPendingCreateTransaction}
+                variant="outline"
+                type='button'
+                onClick={() => {
+                  reset();
+                }}
+              >
+                <span>Reset</span>
+                <RotateCcw />
               </Button>
             </CardFooter>
           </Card>
