@@ -1,13 +1,18 @@
+import { authOptions } from "@/lib/auth/auth";
+import { getServerSession } from "next-auth";
 import { NextRequest } from "next/server";
 
+const BASE_URL = process.env.API_URL;
+
 export async function GET(request: NextRequest) {
+    const session = await getServerSession(authOptions);
     try {
         const res = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/dashboard/todaysspend`,
+            `${BASE_URL}/backend-api/dashboard/todaysspend`,
             {
                 headers: {
                     'Content-Type': 'application/json',
-                    // Add auth headers if needed
+                    Authorization: `Bearer ${session?.accessToken}`,
                 },
             }
         );
