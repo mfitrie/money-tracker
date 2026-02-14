@@ -55,7 +55,7 @@ export function AverageDailySpend() {
                         </CardHeader>
                         <CardContent className="flex flex-row items-center justify-center">
                             <h2 className="text-primary scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
-                                {formatRMCurrency(averageDailySpendData?.data, true)}
+                                {formatRMCurrency(averageDailySpendData?.data as any, true)}
                             </h2>
                         </CardContent>
                     </Card>
