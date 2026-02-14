@@ -103,7 +103,7 @@ export function TodaysChart() {
                         </CardContent>
                         <CardFooter className="flex-col gap-2 text-sm">
                             <div className="flex items-center gap-2 leading-none font-light">
-                                You spend <span className="font-bold">{formatRMCurrency(todaysExpenseData?.data ?? 0, true)}</span> today!
+                                You spend <span className="font-bold text-primary">{formatRMCurrency(todaysExpenseData?.data ?? 0, true)}</span> today!
                             </div>
                         </CardFooter>
                     </Card>
