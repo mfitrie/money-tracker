@@ -3,6 +3,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: postgres-service
+  namespace: money-tracker
   labels:
     app: money-tracker
 spec:
@@ -20,6 +21,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: backend-service
+  namespace: money-tracker
   labels:
     app: money-tracker
 spec:
@@ -37,6 +39,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: frontend-service
+  namespace: money-tracker
   labels:
     app: money-tracker
 spec:

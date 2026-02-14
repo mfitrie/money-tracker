@@ -2,11 +2,17 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: ingress-money-tracker
-  namespace: default
+  namespace: money-tracker
   labels:
     app: money-tracker
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"  # ← Disable nginx SSL redirect
 spec:
   ingressClassName: nginx
+  tls:
+  - hosts:
+    - money-tracker.fitrie-server.xyz
+    secretName: money-tracker-tls
   rules:
     - host: money-tracker.fitrie-server.xyz
       http:
