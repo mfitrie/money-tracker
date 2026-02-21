@@ -6,13 +6,16 @@ import { getUserData, ResponseGetUserData } from "@/lib/queries/user"
 import { formatRMCurrency } from "@/utils/utils"
 import { useQuery } from "@tanstack/react-query"
 import { User, User2 } from "lucide-react"
+import { useSession } from "next-auth/react"
 
 export default function AccountPage() {
+    const { data: session } = useSession();
     const { data, isLoading, error } = useQuery<ResponseGetUserData>({
-        queryKey: ['transactions'],
+        queryKey: ['user', session?.user.username],
         queryFn: () => getUserData({
-            username: 'mfitrie78'
+            username: session?.user.username as any
         }),
+        enabled: Boolean(session?.user.username), // only runs when username is available
     });
 
     return (
