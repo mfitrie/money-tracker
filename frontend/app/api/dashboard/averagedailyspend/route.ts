@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
     const session = await getServerSession(authOptions);
     try {
         const res = await fetch(
-            `${BASE_URL}/backend-api/dashboard/todaysspend`,
+            `${BASE_URL}/backend-api/dashboard/averagedailyspend`,
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
 
         if (!res.ok) {
             return Response.json(
-                { error: "Failed to fetch today's expense" },
+                { error: "Failed to fetch average daily spend" },
                 { status: res.status }
             );
         }

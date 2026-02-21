@@ -11,12 +11,23 @@ export interface GetTodaysExpenseDTO {
     }[],
 }
 
+export interface GetAverageDailySpendDTO {
+    data: number,
+}
 
 
 export async function getTodaysExpense(): Promise<GetTodaysExpenseDTO> {
     const res = await fetch('/api/dashboard/todaysspend');
     if (!res.ok) {
         throw new Error("Failed to fetch today's expense");
+    }
+    return res.json();
+}
+
+export async function getAverageDailySpend(): Promise<GetAverageDailySpendDTO> {
+    const res = await fetch('/api/dashboard/averagedailyspend');
+    if (!res.ok) {
+        throw new Error("Failed to fetch average daily spend");
     }
     return res.json();
 }

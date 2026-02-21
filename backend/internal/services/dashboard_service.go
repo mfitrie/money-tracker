@@ -1,6 +1,7 @@
 package services
 
 import (
+	"math"
 	dbmodels "money-tracker/internal/db"
 	"money-tracker/internal/models"
 )
@@ -34,4 +35,27 @@ func GetTodaysSpend() (float64, []CategorySpend, error) {
 	}
 
 	return total, categorySpends, nil
+}
+
+func AverageDailySpend() (float64, error) {
+	var avg float64
+
+	query := `
+		SELECT AVG(daily_total) AS average_daily_expenditure
+		FROM (
+			SELECT DATE(transaction_date) AS day,
+			       SUM(amount) AS daily_total
+			FROM transactions
+			GROUP BY DATE(transaction_date)
+		) daily_spending;
+	`
+
+	err := dbmodels.DB.Raw(query).Scan(&avg).Error
+	if err != nil {
+		return 0, err
+	}
+
+	rounded := math.Round(avg*100) / 100
+
+	return rounded, nil
 }

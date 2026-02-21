@@ -24,3 +24,19 @@ func GetTodaysSpend(c *gin.Context) {
 		"categories": categorySpend,
 	})
 }
+
+func AverageDailySpend(c *gin.Context) {
+	avg, err := services.AverageDailySpend()
+
+	if err != nil {
+		fmt.Println(err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Fail to get average daily spend",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"data": avg,
+	})
+}
