@@ -137,6 +137,7 @@ export default function HomePage() {
             size="lg"
             value="expense"
             aria-label="expense"
+            hidden
           >
             <span>Expense</span>
           </ToggleGroupItem>
@@ -145,6 +146,7 @@ export default function HomePage() {
             size="lg"
             value="income"
             aria-label="income"
+            hidden
           >
             <span>Income</span>
           </ToggleGroupItem>
