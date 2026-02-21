@@ -2,10 +2,22 @@
 
 import CustomBreadcrumb from "@/components/other-component/custom-breadcrumb"
 import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { getUserData, ResponseGetUserData } from "@/lib/queries/user"
 import { formatRMCurrency } from "@/utils/utils"
+import { useQuery } from "@tanstack/react-query"
 import { User, User2 } from "lucide-react"
+import { useSession } from "next-auth/react"
 
 export default function AccountPage() {
+    const { data: session } = useSession();
+    const { data, isLoading, error } = useQuery<ResponseGetUserData>({
+        queryKey: ['user', session?.user.username],
+        queryFn: () => getUserData({
+            username: session?.user.username as any
+        }),
+        enabled: Boolean(session?.user.username), // only runs when username is available
+    });
+
     return (
         <div className="flex flex-col gap-4">
             <div className='w-full'>
@@ -26,11 +38,11 @@ export default function AccountPage() {
                         <div>
                             <div className="flex flex-row items-center gap-2">
                                 <span className="font-semibold">Name:</span>
-                                <span className="text-muted-foreground">Muhammad Fitrie Bin Roslan</span>
+                                <span className="text-muted-foreground">{data?.name}</span>
                             </div>
                             <div className="flex flex-row items-center gap-2">
-                                <span className="font-semibold">Balance:</span>
-                                <span className="text-muted-foreground">{formatRMCurrency(3000, true)}</span>
+                                <span className="font-semibold">Email:</span>
+                                <span className="text-muted-foreground">{data?.email}</span>
                             </div>
                         </div>
                     </CardContent>

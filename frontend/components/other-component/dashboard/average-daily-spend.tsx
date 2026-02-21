@@ -30,6 +30,8 @@ export function AverageDailySpend() {
     const { data: averageDailySpendData, isLoading, error } = useQuery<GetAverageDailySpendDTO>({
         queryKey: ['getAverageDailySpend'],
         queryFn: () => getAverageDailySpend(),
+        staleTime: 0,
+        refetchOnMount: true,
     });
 
 

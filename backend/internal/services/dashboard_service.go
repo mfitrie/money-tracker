@@ -18,7 +18,7 @@ func GetTodaysSpend() (float64, []CategorySpend, error) {
 
 	err := dbmodels.DB.Model(&models.Transaction{}).
 		Select("COALESCE(SUM(amount), 0)").
-		Where("created_at::date = CURRENT_DATE").
+		Where("transaction_date::date = CURRENT_DATE").
 		Scan(&total).Error
 	if err != nil {
 		return 0, nil, err
@@ -27,7 +27,7 @@ func GetTodaysSpend() (float64, []CategorySpend, error) {
 	err = dbmodels.DB.Model(&models.Transaction{}).
 		Select("c.name, c.color, SUM(amount) as total").
 		Joins("JOIN categories c ON transactions.category_id = c.id").
-		Where("transactions.created_at::date = CURRENT_DATE").
+		Where("transactions.transaction_date::date = CURRENT_DATE").
 		Group("c.name, c.color").
 		Scan(&categorySpends).Error
 	if err != nil {

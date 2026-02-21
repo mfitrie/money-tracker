@@ -34,6 +34,8 @@ export function TodaysChart() {
     const { data: todaysExpenseData, isLoading: isLoadingTodaysExpense, error: errorTodaysExpense } = useQuery<GetTodaysExpenseDTO>({
         queryKey: ['getTodaysExpense'],
         queryFn: () => getTodaysExpense(),
+        staleTime: 0,
+        refetchOnMount: true,
     });
 
     //* ------------------------------- useEffect ------------------------------- *//
