@@ -12,6 +12,12 @@ type CategorySpend struct {
 	Total float64 `json:"total"`
 }
 
+type CurrentWeekSpend struct {
+	DayDate     string   `json:"day_date"`
+	DayName     string   `json:"day_name"`
+	TotalAmount *float64 `json:"total_amount"` // pointer = nullable
+}
+
 func GetTodaysSpend() (float64, []CategorySpend, error) {
 	var total float64
 	var categorySpends []CategorySpend
@@ -58,4 +64,44 @@ func AverageDailySpend() (float64, error) {
 	rounded := math.Round(avg*100) / 100
 
 	return rounded, nil
+}
+
+func GetCurrentWeekSpend() ([]CurrentWeekSpend, error) {
+	var results []CurrentWeekSpend
+
+	query := `
+        WITH week_days AS (
+            SELECT
+                gs::date AS day_date,
+                TRIM(TO_CHAR(gs, 'Day')) AS day_name
+            FROM generate_series(
+                DATE_TRUNC('week', NOW() AT TIME ZONE 'Asia/Kuala_Lumpur'),
+                DATE_TRUNC('week', NOW() AT TIME ZONE 'Asia/Kuala_Lumpur') + INTERVAL '6 days',
+                INTERVAL '1 day'
+            ) AS gs
+        ),
+        daily_spend AS (
+            SELECT
+                DATE_TRUNC('day', t.transaction_date AT TIME ZONE 'Asia/Kuala_Lumpur')::date AS day_date,
+                SUM(t.amount) AS total_amount
+            FROM transactions t
+            WHERE
+                DATE_TRUNC('week', t.transaction_date AT TIME ZONE 'Asia/Kuala_Lumpur') =
+                DATE_TRUNC('week', NOW() AT TIME ZONE 'Asia/Kuala_Lumpur')
+            GROUP BY DATE_TRUNC('day', t.transaction_date AT TIME ZONE 'Asia/Kuala_Lumpur')::date
+        )
+        SELECT
+            wd.day_date,
+            wd.day_name,
+            ds.total_amount
+        FROM week_days wd
+        LEFT JOIN daily_spend ds ON wd.day_date = ds.day_date
+        ORDER BY wd.day_date;
+    `
+
+	if err := dbmodels.DB.Raw(query).Scan(&results).Error; err != nil {
+		return nil, err
+	}
+
+	return results, nil
 }
