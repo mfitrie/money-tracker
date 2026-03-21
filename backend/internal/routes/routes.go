@@ -28,9 +28,6 @@ func RegisterRoutes(router *gin.Engine) {
 		// User
 		protected.GET("/user/:username", controllers.GetUserByUsernameForClient)
 
-		// User
-		protected.GET("/user/:username", controllers.GetUserByUsernameForClient)
-
 		// Account
 		protected.GET("/account", controllers.GetAllAccount)
 		protected.GET("/account/:id", controllers.GetAccountById)
