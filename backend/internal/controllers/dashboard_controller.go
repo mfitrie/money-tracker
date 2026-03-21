@@ -40,3 +40,16 @@ func AverageDailySpend(c *gin.Context) {
 		"data": avg,
 	})
 }
+
+func GetCurrentWeekSpend(c *gin.Context) {
+	dataObj, err := services.GetCurrentWeekSpend()
+
+	if err != nil {
+		fmt.Println(err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Fail to get current week spend",
+		})
+	}
+
+	c.JSON(http.StatusOK, dataObj)
+}

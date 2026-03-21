@@ -23,6 +23,10 @@ func RegisterRoutes(router *gin.Engine) {
 		// Dashboard
 		protected.GET("/dashboard/todaysspend", controllers.GetTodaysSpend)
 		protected.GET("/dashboard/averagedailyspend", controllers.AverageDailySpend)
+		protected.GET("/dashboard/currentweekspend", controllers.GetCurrentWeekSpend)
+
+		// User
+		protected.GET("/user/:username", controllers.GetUserByUsernameForClient)
 
 		// User
 		protected.GET("/user/:username", controllers.GetUserByUsernameForClient)
