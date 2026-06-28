@@ -31,7 +31,6 @@ export default function HomePage() {
   const { data: session, status } = useSession();
 
   //----------------------------------- useState -----------------------------------//
-  const [date, setDate] = useState<Date>()
   const [currentPageTransaction, setCurrentPageTransaction] = useState(1);
   const itemsPerPageTransaction = 10; // Adjust as needed
   const offsetPageTransaction = (currentPageTransaction - 1) * itemsPerPageTransaction
