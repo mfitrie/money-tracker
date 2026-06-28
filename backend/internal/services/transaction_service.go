@@ -7,6 +7,39 @@ import (
 	"money-tracker/internal/schemas"
 )
 
+func SearchTransaction(payload schemas.SearchTransaction) ([]models.Transaction, int64, error) {
+	var transactions []models.Transaction
+	var total int64
+
+	query := dbmodels.DB.Model(&models.Transaction{})
+
+	if !payload.DateFrom.IsZero() {
+		query = query.Where("transaction_date >= ?", payload.DateFrom)
+	}
+	if !payload.DateTo.IsZero() {
+		query = query.Where("transaction_date <= ?", payload.DateTo)
+	}
+
+	if err := query.Count(&total).Error; err != nil {
+		return nil, 0, err
+	}
+
+	// Get paginated results with take and skip
+	result := query.
+		Preload("Account").
+		Preload("Account.User"). // If you need nested user data
+		Preload("Category").
+		Limit(payload.Take).
+		Offset(payload.Offset).
+		Order("transaction_date DESC").
+		Find(&transactions)
+	if result.Error != nil {
+		return nil, 0, result.Error
+	}
+
+	return transactions, total, nil
+}
+
 func GetAllTransaction(take int, offset int) ([]models.Transaction, int64, error) {
 	var transactions []models.Transaction
 	var total int64

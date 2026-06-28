@@ -19,6 +19,7 @@ import { getCurrentWeekSpend, GetCurrentWeekSpendDTO } from "@/lib/queries/dashb
 import { useQuery } from "@tanstack/react-query"
 import { Spinner } from "@/components/ui/spinner"
 import dayjs from "dayjs"
+import { DatePickerWithRange } from "../date-picker-range"
 
 const chartConfig = {
     total_amount: {
@@ -54,6 +55,12 @@ export function CurrentWeekSpend() {
                         <CardDescription>Monday - Sunday, {dayjs().format("MMMM YYYY")}</CardDescription>
                     </CardHeader>
                     <CardContent>
+                        {/* //TODO: calendar week select to fetch */}
+                        <DatePickerWithRange
+                            onChangeEnd={e => {
+                                console.log("From: ", e?.from, "To: ", e?.to);
+                            }}
+                        />
                         <ChartContainer config={chartConfig}>
                             <LineChart
                                 accessibilityLayer
