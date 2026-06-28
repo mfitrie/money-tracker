@@ -121,16 +121,17 @@ export function DatePickerWithRange({
                                 </Button>
                             )}
                         </div>
-                        {fieldState.error?.from && (
+                        {/* //FIX: do later */}
+                        {/* {fieldState.error?.from && (
                             <p className="text-sm text-destructive">
-                                {fieldState.error.from.message}
+                                {fieldState?.error?.from.message}
                             </p>
                         )}
                         {fieldState.error?.to && (
                             <p className="text-sm text-destructive">
-                                {fieldState.error.to.message}
+                                {fieldState?.error?.to.message}
                             </p>
-                        )}
+                        )} */}
                     </Field>
                 )
             }}
