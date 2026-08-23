@@ -21,7 +21,7 @@ import { Controller, useForm } from "react-hook-form";
 import { CreateTransactionDTO, CreateTransactionDTOSchema } from '@/validation/transaction'
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Badge } from '@/components/ui/badge'
-import { useSession } from 'next-auth/react'
+import { signOut, useSession } from 'next-auth/react'
 import { redirect } from 'next/navigation'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Calendar } from '@/components/ui/calendar'
@@ -57,22 +57,24 @@ export default function HomePage() {
   const currentType = watch('type');
   //----------------------------------- useForm -----------------------------------//
 
-  //----------------------------------- useEffect -----------------------------------//
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      redirect('/login');
-    }
-  }, [session, status]);
-  //----------------------------------- useEffect -----------------------------------//
-
 
   //----------------------------------- Query -----------------------------------//
   const queryClient = useQueryClient();
-  const { data: transactionData, isLoading: isLoadingTransaction, error: errorTransaction } = useQuery<ResponseGetTransactionDTO>({
+  const {
+    data: transactionData,
+    isLoading: isLoadingTransaction,
+    isError: isErrorTransactionsData,
+    error: errorTransaction,
+  } = useQuery<ResponseGetTransactionDTO>({
     queryKey: ['transactions', currentPageTransaction],
     queryFn: () => getTransactions(itemsPerPageTransaction, offsetPageTransaction),
+    retry: false,
   });
-  const { data: categoryData, isLoading: isLoadingCategory, error: errorCategory } = useQuery<ResponseGetCategoryDTO>({
+  const {
+    data: categoryData,
+    isLoading: isLoadingCategory,
+    error: errorCategory
+  } = useQuery<ResponseGetCategoryDTO>({
     queryKey: ['categories', currentType],
     queryFn: () => getCatogories({
       take: 10,
@@ -105,6 +107,28 @@ export default function HomePage() {
     },
   });
   //----------------------------------- Query -----------------------------------//
+
+  //----------------------------------- useEffect -----------------------------------//
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      redirect('/login');
+    }
+  }, [session, status]);
+
+  useEffect(() => {
+    if (isErrorTransactionsData && errorTransaction) {
+      const statusCode = (errorTransaction as any)?.status;
+      if (statusCode === 401) {
+        signOut({
+          callbackUrl: "/login"
+        })
+      }
+    }
+  }, [
+    isErrorTransactionsData,
+    errorTransaction
+  ]);
+  //----------------------------------- useEffect -----------------------------------//
 
   function onSubmit(
     data: CreateTransactionDTO
