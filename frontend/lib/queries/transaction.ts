@@ -1,4 +1,3 @@
-// lib/queries/transactions.ts (or wherever you have it)
 import { ResponseGet } from "@/types/common-request.type";
 import { CreateTransactionDTO } from "@/validation/transaction";
 
@@ -46,7 +45,18 @@ export async function getTransactions(
     const res = await fetch(`/api/transaction?take=${take}&offset=${offset}`);
 
     if (!res.ok) {
-        throw new Error('Failed to fetch transactions');
+        let message = `Request failed with status ${res.status}`;
+
+        try {
+            const errorBody = await res.json();
+            message = errorBody.message ?? message;
+        } catch {
+            // response wasn't JSON, fall back to default message
+        }
+
+        const error = new Error(message) as Error & { status?: number };
+        error.status = res.status;
+        throw error;
     }
 
     return res.json();
