@@ -37,6 +37,7 @@ func LoadConfig() {
 	AppConfig.PostgresPassword = os.Getenv("POSTGRES_PASSWORD")
 	AppConfig.PostgresDb = os.Getenv("POSTGRES_DB")
 	AppConfig.PostgresPort = os.Getenv("POSTGRES_PORT")
+	AppConfig.PostgresPort = os.Getenv("POSTGRES_PORT")
 
 	// AppConfig.SMTPHost = os.Getenv("SMTP_HOST")
 	// AppConfig.SMTPUser = os.Getenv("SMTP_USER")

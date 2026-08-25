@@ -37,6 +37,7 @@ func RegisterRoutes(router *gin.Engine) {
 		protected.GET("/transaction/:id", controllers.GetTransactionById)
 		protected.GET("/transaction/search", controllers.SearchTransaction)
 		protected.POST("/transaction", controllers.InsertTransaction)
+		protected.DELETE("/transaction/:id", controllers.DeleteTransaction)
 
 		// Category
 		protected.GET("/category", controllers.GetAllCategories)

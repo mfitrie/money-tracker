@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"errors"
 	"math"
 	"money-tracker/internal/schemas"
 	"money-tracker/internal/services"
@@ -9,6 +10,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 func SearchTransaction(c *gin.Context) {
@@ -143,4 +145,20 @@ func InsertTransaction(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"status": "Transaction inserted"})
 
+}
+
+func DeleteTransaction(c *gin.Context) {
+	transactionId := c.Param("id")
+	err := services.DeleteTransaction(transactionId)
+
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Transaction not found"})
+			return
+		}
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.Status(http.StatusNoContent)
 }
