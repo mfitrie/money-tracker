@@ -5,6 +5,7 @@ import (
 	dbmodels "money-tracker/internal/db"
 	"money-tracker/internal/routes"
 	"net/http"
+	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -45,11 +46,18 @@ func main() {
 	}
 	log.Println("Database setup completed successfully")
 
+	if os.Getenv("GIN_MODE") == "" {
+		gin.SetMode(gin.DebugMode)
+	} else {
+		gin.SetMode(gin.ReleaseMode)
+	}
+
 	//* Gin
 	r := gin.Default()
+
+	r.Use(CorsMiddleware())
 	// Set up routes
 	routes.RegisterRoutes(r)
-	r.Use(CorsMiddleware())
 	// Run the server
 	r.Run(":8080")
 

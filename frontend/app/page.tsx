@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input'
 import CustomBreadcrumb from '@/components/other-component/custom-breadcrumb'
 import { useEffect, useState } from 'react'
 import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { createTransaction, getTransactions, ResponseGetTransactionDTO } from '@/lib/queries/transaction'
+import { createTransaction, deleteTransaction, getTransactions, ResponseGetTransactionDTO } from '@/lib/queries/transaction'
 import dayjs from "dayjs";
 import { formatRMCurrency } from '@/utils/utils'
 import { Spinner } from '@/components/ui/spinner'
@@ -16,7 +16,7 @@ import { toast } from 'sonner'
 import { getCatogories, ResponseGetCategoryDTO } from '@/lib/queries/category'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { ChevronDownIcon, Plus, RotateCcw } from 'lucide-react'
+import { ChevronDownIcon, Plus, RotateCcw, Trash } from 'lucide-react'
 import { Controller, useForm } from "react-hook-form";
 import { CreateTransactionDTO, CreateTransactionDTOSchema } from '@/validation/transaction'
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -25,6 +25,7 @@ import { signOut, useSession } from 'next-auth/react'
 import { redirect } from 'next/navigation'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Calendar } from '@/components/ui/calendar'
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
 
 
 export default function HomePage() {
@@ -104,6 +105,21 @@ export default function HomePage() {
     },
     onError: (error) => {
       console.error('Failed to create transaction:', error);
+    },
+  });
+
+  const {
+    mutate: deleteTransactionMutation,
+    isPending: isPendingDeleteTransaction,
+  } = useMutation<void, Error, string>({
+    mutationFn: deleteTransaction,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['transactions'] });
+      toast.success("Transaction deleted");
+    },
+    onError: (error) => {
+      console.error('Failed to delete transaction:', error);
+      toast.error(error.message || "Failed to delete transaction");
     },
   });
   //----------------------------------- Query -----------------------------------//
@@ -372,12 +388,15 @@ export default function HomePage() {
                       <TableHead>Description</TableHead>
                       <TableHead>Date</TableHead>
                       <TableHead>Amount (RM)</TableHead>
+                      <TableHead>Action</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {
                       transactionData && transactionData.data.map((item) => (
-                        <TableRow key={item.id}>
+                        <TableRow 
+                          key={item.id}
+                        >
                           <TableCell>
                             {
                               (() => {
@@ -418,6 +437,39 @@ export default function HomePage() {
                           </TableCell>
                           <TableCell>{dayjs(item.transaction_date).format("D/M/YYYY")}</TableCell>
                           <TableCell>{formatRMCurrency(item.amount, false)}</TableCell>
+                          <TableCell>
+                            
+                            <AlertDialog key={item.id}>
+                              <AlertDialogTrigger asChild>
+                                <Button
+                                  className='cursor-pointer'
+                                  variant="destructive"
+                                  size="icon"
+                                  disabled={isPendingDeleteTransaction}
+                                >
+                                  {isPendingDeleteTransaction ? <Spinner key={item.id} data-icon="inline-start" /> : <Trash key={item.id} />}
+                                </Button>
+                              </AlertDialogTrigger>
+                              <AlertDialogContent>
+                                <AlertDialogHeader>
+                                  <AlertDialogTitle>Delete this transaction?</AlertDialogTitle>
+                                  <AlertDialogDescription>
+                                    This action cannot be undone. This will permanently delete the transaction.
+                                  </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                  <AlertDialogCancel className='cursor-pointer'>Cancel</AlertDialogCancel>
+                                  <AlertDialogAction
+                                    className='cursor-pointer'
+                                    onClick={() => deleteTransactionMutation(item.id)}
+                                  >
+                                    Delete
+                                  </AlertDialogAction>
+                                </AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialog>
+                          
+                          </TableCell>
                         </TableRow>
                       ))
                     }

@@ -5,6 +5,8 @@ import (
 	dbmodels "money-tracker/internal/db"
 	"money-tracker/internal/models"
 	"money-tracker/internal/schemas"
+
+	"gorm.io/gorm"
 )
 
 func SearchTransaction(payload schemas.SearchTransaction) ([]models.Transaction, int64, error) {
@@ -98,4 +100,17 @@ func InsertTransaction(input schemas.InsertTransaction) (*models.Transaction, er
 	}
 
 	return &newTransaction, nil
+}
+
+func DeleteTransaction(id string) error {
+	result := dbmodels.DB.Delete(&models.Transaction{}, "id = ?", id)
+
+	if result.Error != nil {
+		return result.Error
+	}
+	if result.RowsAffected == 0 {
+		return gorm.ErrRecordNotFound
+	}
+	return nil
+
 }

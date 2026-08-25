@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"fmt"
 	"money-tracker/internal/services"
 	"net/http"
 	"strings"
@@ -10,7 +9,6 @@ import (
 )
 
 func JWTAuthMiddleware() gin.HandlerFunc {
-	fmt.Print("Run middleware...")
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")
 
