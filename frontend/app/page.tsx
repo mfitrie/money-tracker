@@ -25,6 +25,7 @@ import { signOut, useSession } from 'next-auth/react'
 import { redirect } from 'next/navigation'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Calendar } from '@/components/ui/calendar'
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
 
 
 export default function HomePage() {
@@ -435,18 +436,37 @@ export default function HomePage() {
                           <TableCell>{dayjs(item.transaction_date).format("D/M/YYYY")}</TableCell>
                           <TableCell>{formatRMCurrency(item.amount, false)}</TableCell>
                           <TableCell>
-                            <div>
-                              <Button
-                                key={item.id}
-                                className='cursor-pointer'
-                                variant="destructive"
-                                size="icon"
-                                disabled={isPendingDeleteTransaction}
-                                onClick={() => deleteTransactionMutation(item.id)}
-                              >
-                                {isPendingDeleteTransaction ? <Spinner data-icon="inline-start" /> : <Trash />}
-                              </Button>
-                            </div>
+                            
+                            <AlertDialog key={item.id}>
+                              <AlertDialogTrigger asChild>
+                                <Button
+                                  className='cursor-pointer'
+                                  variant="destructive"
+                                  size="icon"
+                                  disabled={isPendingDeleteTransaction}
+                                >
+                                  {isPendingDeleteTransaction ? <Spinner data-icon="inline-start" /> : <Trash />}
+                                </Button>
+                              </AlertDialogTrigger>
+                              <AlertDialogContent>
+                                <AlertDialogHeader>
+                                  <AlertDialogTitle>Delete this transaction?</AlertDialogTitle>
+                                  <AlertDialogDescription>
+                                    This action cannot be undone. This will permanently delete the transaction.
+                                  </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                  <AlertDialogCancel className='cursor-pointer'>Cancel</AlertDialogCancel>
+                                  <AlertDialogAction
+                                    className='cursor-pointer'
+                                    onClick={() => deleteTransactionMutation(item.id)}
+                                  >
+                                    Delete
+                                  </AlertDialogAction>
+                                </AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialog>
+                          
                           </TableCell>
                         </TableRow>
                       ))
