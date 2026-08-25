@@ -394,7 +394,9 @@ export default function HomePage() {
                   <TableBody>
                     {
                       transactionData && transactionData.data.map((item) => (
-                        <TableRow key={item.id}>
+                        <TableRow 
+                          key={item.id}
+                        >
                           <TableCell>
                             {
                               (() => {
@@ -445,7 +447,7 @@ export default function HomePage() {
                                   size="icon"
                                   disabled={isPendingDeleteTransaction}
                                 >
-                                  {isPendingDeleteTransaction ? <Spinner data-icon="inline-start" /> : <Trash />}
+                                  {isPendingDeleteTransaction ? <Spinner key={item.id} data-icon="inline-start" /> : <Trash key={item.id} />}
                                 </Button>
                               </AlertDialogTrigger>
                               <AlertDialogContent>
