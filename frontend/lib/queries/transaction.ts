@@ -81,3 +81,19 @@ export async function createTransaction(
 
     return res.json();
 }
+
+
+export async function deleteTransaction(id: string): Promise<void> {
+    const res = await fetch(`/api/transaction/${id}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+
+    if (!res.ok) {
+        throw new Error('Failed to delete transaction');
+    }
+
+    // 204 No Content — nothing to parse
+}

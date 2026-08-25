@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input'
 import CustomBreadcrumb from '@/components/other-component/custom-breadcrumb'
 import { useEffect, useState } from 'react'
 import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { createTransaction, getTransactions, ResponseGetTransactionDTO } from '@/lib/queries/transaction'
+import { createTransaction, deleteTransaction, getTransactions, ResponseGetTransactionDTO } from '@/lib/queries/transaction'
 import dayjs from "dayjs";
 import { formatRMCurrency } from '@/utils/utils'
 import { Spinner } from '@/components/ui/spinner'
@@ -16,7 +16,7 @@ import { toast } from 'sonner'
 import { getCatogories, ResponseGetCategoryDTO } from '@/lib/queries/category'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { ChevronDownIcon, Plus, RotateCcw } from 'lucide-react'
+import { ChevronDownIcon, Plus, RotateCcw, Trash } from 'lucide-react'
 import { Controller, useForm } from "react-hook-form";
 import { CreateTransactionDTO, CreateTransactionDTOSchema } from '@/validation/transaction'
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -104,6 +104,21 @@ export default function HomePage() {
     },
     onError: (error) => {
       console.error('Failed to create transaction:', error);
+    },
+  });
+
+  const {
+    mutate: deleteTransactionMutation,
+    isPending: isPendingDeleteTransaction,
+  } = useMutation<void, Error, string>({
+    mutationFn: deleteTransaction,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['transactions'] });
+      toast.success("Transaction deleted");
+    },
+    onError: (error) => {
+      console.error('Failed to delete transaction:', error);
+      toast.error(error.message || "Failed to delete transaction");
     },
   });
   //----------------------------------- Query -----------------------------------//
@@ -372,6 +387,7 @@ export default function HomePage() {
                       <TableHead>Description</TableHead>
                       <TableHead>Date</TableHead>
                       <TableHead>Amount (RM)</TableHead>
+                      <TableHead>Action</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -418,6 +434,20 @@ export default function HomePage() {
                           </TableCell>
                           <TableCell>{dayjs(item.transaction_date).format("D/M/YYYY")}</TableCell>
                           <TableCell>{formatRMCurrency(item.amount, false)}</TableCell>
+                          <TableCell>
+                            <div>
+                              <Button
+                                key={item.id}
+                                className='cursor-pointer'
+                                variant="destructive"
+                                size="icon"
+                                disabled={isPendingDeleteTransaction}
+                                onClick={() => deleteTransactionMutation(item.id)}
+                              >
+                                {isPendingDeleteTransaction ? <Spinner data-icon="inline-start" /> : <Trash />}
+                              </Button>
+                            </div>
+                          </TableCell>
                         </TableRow>
                       ))
                     }
