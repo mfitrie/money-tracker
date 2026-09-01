@@ -78,7 +78,7 @@ export default function HomePage() {
   } = useQuery<ResponseGetCategoryDTO>({
     queryKey: ['categories', currentType],
     queryFn: () => getCatogories({
-      take: 10,
+      take: 20,
       offset: 0,
       type: currentType,
     }),
