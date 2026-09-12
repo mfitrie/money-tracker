@@ -20,6 +20,7 @@ import { useQuery } from "@tanstack/react-query"
 import { Spinner } from "@/components/ui/spinner"
 import dayjs from "dayjs"
 import { DatePickerWithRange } from "../date-picker-range"
+import { useEffect } from "react"
 
 const chartConfig = {
     total_amount: {
@@ -37,10 +38,13 @@ export function CurrentWeekSpend() {
     });
 
     // Normalize nulls to 0 so the line renders continuously
-    const chartData = dataCurrentWeekSpend?.map(item => ({
+    const chartData: GetCurrentWeekSpendDTO[] = dataCurrentWeekSpend?.map(item => ({
         ...item,
         total_amount: item.total_amount ?? 0,
     })) ?? [];
+
+
+
 
     return (
         <div>
@@ -51,16 +55,21 @@ export function CurrentWeekSpend() {
             {!isLoading && (
                 <Card>
                     <CardHeader>
-                        <CardTitle>Current Week Spend</CardTitle>
-                        <CardDescription>Monday - Sunday, {dayjs().format("MMMM YYYY")}</CardDescription>
-                    </CardHeader>
-                    <CardContent>
+                        <CardTitle>Date Range Spend</CardTitle>
                         {/* //TODO: calendar week select to fetch */}
                         <DatePickerWithRange
                             onChangeEnd={e => {
                                 console.log("From: ", e?.from, "To: ", e?.to);
                             }}
                         />
+                    </CardHeader>
+                    <CardContent className="flex flex-col gap-8">
+                        <div className="flex flex-col justify-center items-center">
+                            <div className="flex flex-row items-center gap-2">
+                                <span className="text-sm">Total: </span>
+                                <span className="text-primary font-bold text-xl">{formatRMCurrency(chartData.reduce((acc, curr) => acc + (curr?.total_amount ?? 0), 0), true)}</span>
+                            </div>
+                        </div>
                         <ChartContainer config={chartConfig}>
                             <LineChart
                                 accessibilityLayer

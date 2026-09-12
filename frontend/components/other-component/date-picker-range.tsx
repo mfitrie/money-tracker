@@ -73,7 +73,7 @@ export function DatePickerWithRange({
 
                 return (
                     <Field className="mx-auto w-60">
-                        <FieldLabel htmlFor="dateRange">Date Picker Range</FieldLabel>
+                        {/* <FieldLabel htmlFor="dateRange">Date Picker Range</FieldLabel> */}
                         <div className="flex items-center gap-1.5">
                             <Popover>
                                 <PopoverTrigger asChild>
