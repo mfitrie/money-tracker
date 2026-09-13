@@ -1,3 +1,5 @@
+import z from "zod";
+
 export interface GetTodaysExpenseDTO {
     data: number,
     categories: {
@@ -17,10 +19,11 @@ export interface GetCurrentWeekSpendDTO {
     total_amount: number | null
 }
 
-export interface GetRangeDateSpendDTO {
-    date_from: string,
-    date_to: string,
-}
+export const GetRangeDateSpendSchema = z.object({
+    date_from: z.string(),
+    date_to: z.string(),
+});
+export type GetRangeDateSpendDTO = z.infer<typeof GetRangeDateSpendSchema>;
 
 
 export async function getTodaysExpense(): Promise<GetTodaysExpenseDTO> {
@@ -48,13 +51,16 @@ export async function getCurrentWeekSpend(): Promise<GetCurrentWeekSpendDTO[]> {
 }
 
 export async function getRangeDateSpend(payload: GetRangeDateSpendDTO): Promise<GetCurrentWeekSpendDTO[]> {
-    const url = new URLSearchParams('/api/dashboard/rangedatespend');
-    url.set("date_from", payload.date_from);
-    url.set("date_to", payload.date_to);
+    const params = new URLSearchParams({
+        date_from: payload.date_from,
+        date_to: payload.date_to,
+    });
 
-    const res = await fetch(url.toString());
+    const res = await fetch(`/api/dashboard/rangedatespend?${params.toString()}`);
+
     if (!res.ok) {
         throw new Error("Failed to fetch range date spend");
     }
+
     return res.json();
 }

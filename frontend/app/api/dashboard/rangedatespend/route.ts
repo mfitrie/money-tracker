@@ -7,13 +7,13 @@ const BASE_URL = process.env.API_URL;
 
 export async function GET(request: NextRequest) {
     const session = await getServerSession(authOptions);
-    const dateFrom = request.nextUrl.searchParams.get("dateFrom");
-    const dateTo = request.nextUrl.searchParams.get("dateTo");
+    const date_from = request.nextUrl.searchParams.get("date_from");
+    const date_to = request.nextUrl.searchParams.get("date_to");
 
     try {
-        const url = new URL(`${BASE_URL}/backend-api/dashboard/rangedatespend`);
-        url.searchParams.set("dateFrom", dateFrom ?? "");
-        url.searchParams.set("dateTo", dateTo ?? "");
+        const url = new URL(`${BASE_URL}/backend-api/dashboard/rangedatespend?`);
+        url.searchParams.set("date_from", date_from ?? "");
+        url.searchParams.set("date_to", date_to ?? "");
 
         const res = await fetch(
             url.toString(),
