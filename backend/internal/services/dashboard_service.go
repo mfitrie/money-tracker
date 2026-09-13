@@ -1,9 +1,12 @@
 package services
 
 import (
+	"fmt"
 	"math"
 	dbmodels "money-tracker/internal/db"
 	"money-tracker/internal/models"
+	"money-tracker/internal/schemas"
+	"time"
 )
 
 type CategorySpend struct {
@@ -100,6 +103,60 @@ func GetCurrentWeekSpend() ([]CurrentWeekSpend, error) {
     `
 
 	if err := dbmodels.DB.Raw(query).Scan(&results).Error; err != nil {
+		return nil, err
+	}
+
+	return results, nil
+}
+
+func GetRangeDateSpend(payload schemas.GetRangeDateSpendDTO) ([]CurrentWeekSpend, error) {
+	var results []CurrentWeekSpend
+
+	dateFrom, err := time.Parse(time.RFC3339, payload.DateFrom)
+	if err != nil {
+		return nil, fmt.Errorf("invalid dateFrom: %w", err)
+	}
+
+	dateTo, err := time.Parse(time.RFC3339, payload.DateTo)
+	if err != nil {
+		return nil, fmt.Errorf("invalid dateTo: %w", err)
+	}
+
+	if dateTo.Before(dateFrom) {
+		return nil, fmt.Errorf("dateTo must not be before dateFrom")
+	}
+
+	query := `
+        WITH range_days AS (
+            SELECT
+                gs::date AS day_date,
+                TRIM(TO_CHAR(gs, 'Day')) AS day_name
+            FROM generate_series(
+                DATE_TRUNC('day', ?::timestamptz AT TIME ZONE 'Asia/Kuala_Lumpur'),
+                DATE_TRUNC('day', ?::timestamptz AT TIME ZONE 'Asia/Kuala_Lumpur'),
+                INTERVAL '1 day'
+            ) AS gs
+        ),
+        daily_spend AS (
+            SELECT
+                DATE_TRUNC('day', t.transaction_date AT TIME ZONE 'Asia/Kuala_Lumpur')::date AS day_date,
+                SUM(t.amount) AS total_amount
+            FROM transactions t
+            WHERE
+                (t.transaction_date AT TIME ZONE 'Asia/Kuala_Lumpur') >= DATE_TRUNC('day', ?::timestamptz AT TIME ZONE 'Asia/Kuala_Lumpur')
+                AND (t.transaction_date AT TIME ZONE 'Asia/Kuala_Lumpur') < DATE_TRUNC('day', ?::timestamptz AT TIME ZONE 'Asia/Kuala_Lumpur') + INTERVAL '1 day'
+            GROUP BY DATE_TRUNC('day', t.transaction_date AT TIME ZONE 'Asia/Kuala_Lumpur')::date
+        )
+        SELECT
+            rd.day_date,
+            rd.day_name,
+            ds.total_amount
+        FROM range_days rd
+        LEFT JOIN daily_spend ds ON rd.day_date = ds.day_date
+        ORDER BY rd.day_date;
+    `
+
+	if err := dbmodels.DB.Raw(query, dateFrom, dateTo, dateFrom, dateTo).Scan(&results).Error; err != nil {
 		return nil, err
 	}
 

@@ -2,8 +2,10 @@ package controllers
 
 import (
 	"fmt"
+	"money-tracker/internal/schemas"
 	"money-tracker/internal/services"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -52,4 +54,38 @@ func GetCurrentWeekSpend(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, dataObj)
+}
+
+func GetRangeDateSpend(c *gin.Context) {
+	var payload schemas.GetRangeDateSpendDTO
+	if err := c.ShouldBindJSON(&payload); err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+
+	dateFrom, err := time.Parse(time.RFC3339, payload.DateFrom)
+	if err != nil {
+		c.JSON(400, gin.H{"error": "invalid dateFrom: " + err.Error()})
+		return
+	}
+
+	dateTo, err := time.Parse(time.RFC3339, payload.DateTo)
+	if err != nil {
+		c.JSON(400, gin.H{"error": "invalid dateTo: " + err.Error()})
+		return
+	}
+
+	if dateTo.Before(dateFrom) {
+		c.JSON(400, gin.H{"error": "dateTo must not be before dateFrom"})
+		return
+	}
+
+	results, err := services.GetRangeDateSpend(payload)
+	if err != nil {
+		fmt.Print(err.Error())
+		c.JSON(500, gin.H{"error": "Internal error"})
+		return
+	}
+
+	c.JSON(200, results)
 }
