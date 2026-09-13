@@ -7,10 +7,16 @@ const BASE_URL = process.env.API_URL;
 
 export async function GET(request: NextRequest) {
     const session = await getServerSession(authOptions);
+    const dateFrom = request.nextUrl.searchParams.get("dateFrom");
+    const dateTo = request.nextUrl.searchParams.get("dateTo");
 
     try {
+        const url = new URL(`${BASE_URL}/backend-api/dashboard/rangedatespend`);
+        url.searchParams.set("dateFrom", dateFrom ?? "");
+        url.searchParams.set("dateTo", dateTo ?? "");
+
         const res = await fetch(
-            `${BASE_URL}/backend-api/dashboard/todaysspend`,
+            url.toString(),
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -21,7 +27,7 @@ export async function GET(request: NextRequest) {
 
         if (!res.ok) {
             return Response.json(
-                { error: "Failed to fetch today's expense" },
+                { error: "Failed to fetch range date spend" },
                 { status: res.status }
             );
         }

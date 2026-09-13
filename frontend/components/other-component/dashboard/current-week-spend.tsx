@@ -20,7 +20,7 @@ import { useQuery } from "@tanstack/react-query"
 import { Spinner } from "@/components/ui/spinner"
 import dayjs from "dayjs"
 import { DatePickerWithRange } from "../date-picker-range"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 
 const chartConfig = {
     total_amount: {
@@ -37,12 +37,21 @@ export function CurrentWeekSpend() {
         refetchOnMount: true,
     });
 
-    // Normalize nulls to 0 so the line renders continuously
-    const chartData: GetCurrentWeekSpendDTO[] = dataCurrentWeekSpend?.map(item => ({
-        ...item,
-        total_amount: item.total_amount ?? 0,
-    })) ?? [];
+    //*-------------------------------------------------------useState-------------------------------------------------------*//
+    const [listData, setListData] = useState<GetCurrentWeekSpendDTO[]>([]);
+    //*-------------------------------------------------------useState-------------------------------------------------------*//
 
+    //*-------------------------------------------------------useEffect-------------------------------------------------------*//
+    useEffect(() => {
+        const listChartData: GetCurrentWeekSpendDTO[] = dataCurrentWeekSpend?.map(item => ({
+            ...item,
+            total_amount: item.total_amount ?? 0,
+        })) ?? [];
+
+        setListData(listChartData);
+    }, [dataCurrentWeekSpend]);
+    //*-------------------------------------------------------useEffect-------------------------------------------------------*//
+    
 
 
 
@@ -67,13 +76,13 @@ export function CurrentWeekSpend() {
                         <div className="flex flex-col justify-center items-center">
                             <div className="flex flex-row items-center gap-2">
                                 <span className="text-sm">Total: </span>
-                                <span className="text-primary font-bold text-xl">{formatRMCurrency(chartData.reduce((acc, curr) => acc + (curr?.total_amount ?? 0), 0), true)}</span>
+                                <span className="text-primary font-bold text-xl">{formatRMCurrency(listData.reduce((acc, curr) => acc + (curr?.total_amount ?? 0), 0), true)}</span>
                             </div>
                         </div>
                         <ChartContainer config={chartConfig}>
                             <LineChart
                                 accessibilityLayer
-                                data={chartData}
+                                data={listData}
                                 margin={{ top: 24, left: 24, right: 24, bottom: 0 }}
                             >
                                 <CartesianGrid vertical={false} />

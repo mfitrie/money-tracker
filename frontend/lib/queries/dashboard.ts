@@ -1,7 +1,3 @@
-// lib/queries/transactions.ts (or wherever you have it)
-import { ResponseGet } from "@/types/common-request.type";
-import { CreateTransactionDTO } from "@/validation/transaction";
-
 export interface GetTodaysExpenseDTO {
     data: number,
     categories: {
@@ -19,6 +15,11 @@ export interface GetCurrentWeekSpendDTO {
     day_date: string,
     day_name: string,
     total_amount: number | null
+}
+
+export interface GetRangeDateSpendDTO {
+    date_from: string,
+    date_to: string,
 }
 
 
@@ -42,6 +43,18 @@ export async function getCurrentWeekSpend(): Promise<GetCurrentWeekSpendDTO[]> {
     const res = await fetch('/api/dashboard/currentweekspend');
     if (!res.ok) {
         throw new Error("Failed to fetch current week spend");
+    }
+    return res.json();
+}
+
+export async function getRangeDateSpend(payload: GetRangeDateSpendDTO): Promise<GetCurrentWeekSpendDTO[]> {
+    const url = new URLSearchParams('/api/dashboard/rangedatespend');
+    url.set("date_from", payload.date_from);
+    url.set("date_to", payload.date_to);
+
+    const res = await fetch(url.toString());
+    if (!res.ok) {
+        throw new Error("Failed to fetch range date spend");
     }
     return res.json();
 }
