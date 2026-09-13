@@ -24,6 +24,7 @@ func RegisterRoutes(router *gin.Engine) {
 		protected.GET("/dashboard/todaysspend", controllers.GetTodaysSpend)
 		protected.GET("/dashboard/averagedailyspend", controllers.AverageDailySpend)
 		protected.GET("/dashboard/currentweekspend", controllers.GetCurrentWeekSpend) //FIX: do based on from and to date
+		protected.GET("/dashboard/rangedatespend", controllers.GetRangeDateSpend)
 
 		// User
 		protected.GET("/user/:username", controllers.GetUserByUsernameForClient)

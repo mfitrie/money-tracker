@@ -1,6 +1,4 @@
-// lib/queries/transactions.ts (or wherever you have it)
-import { ResponseGet } from "@/types/common-request.type";
-import { CreateTransactionDTO } from "@/validation/transaction";
+import z from "zod";
 
 export interface GetTodaysExpenseDTO {
     data: number,
@@ -20,6 +18,12 @@ export interface GetCurrentWeekSpendDTO {
     day_name: string,
     total_amount: number | null
 }
+
+export const GetRangeDateSpendSchema = z.object({
+    date_from: z.string(),
+    date_to: z.string(),
+});
+export type GetRangeDateSpendDTO = z.infer<typeof GetRangeDateSpendSchema>;
 
 
 export async function getTodaysExpense(): Promise<GetTodaysExpenseDTO> {
@@ -43,5 +47,20 @@ export async function getCurrentWeekSpend(): Promise<GetCurrentWeekSpendDTO[]> {
     if (!res.ok) {
         throw new Error("Failed to fetch current week spend");
     }
+    return res.json();
+}
+
+export async function getRangeDateSpend(payload: GetRangeDateSpendDTO): Promise<GetCurrentWeekSpendDTO[]> {
+    const params = new URLSearchParams({
+        date_from: payload.date_from,
+        date_to: payload.date_to,
+    });
+
+    const res = await fetch(`/api/dashboard/rangedatespend?${params.toString()}`);
+
+    if (!res.ok) {
+        throw new Error("Failed to fetch range date spend");
+    }
+
     return res.json();
 }
