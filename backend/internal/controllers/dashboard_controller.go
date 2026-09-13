@@ -58,7 +58,7 @@ func GetCurrentWeekSpend(c *gin.Context) {
 
 func GetRangeDateSpend(c *gin.Context) {
 	var payload schemas.GetRangeDateSpendDTO
-	if err := c.ShouldBindJSON(&payload); err != nil {
+	if err := c.ShouldBindQuery(&payload); err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
